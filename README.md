@@ -1,3 +1,4 @@
+<img width="426" height="240" alt="Video Project 1" src="https://github.com/user-attachments/assets/dfb6a899-4418-49ce-ac12-5c4d24127c49" />
 
 ---
 
