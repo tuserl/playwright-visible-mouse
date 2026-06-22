@@ -54,6 +54,6 @@ const DemoMouse = require("./lib/demoMouse");
   // Wait for 3 seconds
   await new Promise((resolve) => setTimeout(resolve, 3000));
 
-  console.log("Closing browser cleanly...");
-  await browser.close();
+  //  console.log("Closing browser cleanly...");
+  //  await browser.close();
 })();
