@@ -1,0 +1,98 @@
+const { chromium } = require("playwright");
+
+const DemoMouse = require("./lib/demoMouse");
+
+
+(async()=>{
+
+
+const browser =
+await chromium.launch({
+    headless:false,
+    slowMo:500
+});
+
+
+
+const adminPage =
+await (await browser.newContext())
+.newPage();
+
+
+const teacherPage =
+await (await browser.newContext())
+.newPage();
+
+
+
+await adminPage.goto(
+"http://localhost:3000"
+);
+
+
+await teacherPage.goto(
+"http://localhost:3000"
+);
+
+
+
+const adminMouse =
+new DemoMouse(
+    adminPage,
+    "red"
+);
+
+
+const teacherMouse =
+new DemoMouse(
+    teacherPage,
+    "blue"
+);
+
+
+
+await adminMouse.install();
+
+await teacherMouse.install();
+
+
+
+
+// ADMIN
+
+await adminMouse.focus();
+
+
+await adminMouse.moveTo("#role");
+
+
+await adminPage.fill(
+"#role",
+"Admin"
+);
+
+
+await adminMouse.click("#submit");
+
+
+
+
+// TEACHER
+
+await teacherMouse.focus();
+
+
+await teacherMouse.moveTo("#role");
+
+
+await teacherPage.fill(
+"#role",
+"Teacher"
+);
+
+
+await teacherMouse.click("#submit");
+
+
+
+})();
