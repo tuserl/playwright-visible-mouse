@@ -22,3 +22,6 @@ module.exports = defineConfig({
 ```
 
 npx playwright show-report
+
+
+npx playwright test demoEDfull-mulrole-split.spec.js

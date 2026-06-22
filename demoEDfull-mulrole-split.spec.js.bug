@@ -1,0 +1,95 @@
+const { test, expect } = require("@playwright/test");
+const DemoMouse = require("./lib/demoMouse");
+
+// 🌟 FORCE CONCURRENCY: Tells the test runner to execute all suites at the exact same time
+test.describe.configure({ mode: "parallel" });
+
+// Global context overrides to prevent viewport constraints
+test.use({
+  viewport: null,
+  deviceScaleFactor: undefined,
+});
+
+// ============================================================================
+// WORKSPACE 1: LEFT SIDE TILING
+// ============================================================================
+test.describe("Left Workspace Setup", () => {
+  // Scoped browser override for the left half of your screen
+  test.use({
+    launchOptions: {
+      headless: false,
+      args: ["--window-position=0,0", "--window-size=960,1080", "--no-sandbox"],
+    },
+  });
+
+  test("Guest Mouse - System Admin Flow", async ({ page }) => {
+    await page.goto("http://localhost:3001");
+
+    const guestMouse = new DemoMouse(page, "transparent");
+    await guestMouse.install();
+    await guestMouse.focus();
+
+    const signInButton = page.getByRole("button", { name: "Sign In" });
+    await guestMouse.click(signInButton);
+
+    const emailInput = page.getByPlaceholder("you@example.com").nth(0);
+    const passwordInput = page.getByPlaceholder("Enter your password").nth(0);
+
+    await guestMouse.type(emailInput, "admin@system.com", 50);
+    await guestMouse.type(passwordInput, "Admin@123", 50);
+    await guestMouse.click(signInButton);
+
+    // 🌟 SPEC ASSERTION: Intelligently verify that dashboard access passed
+    const userButton = page.getByRole("button", { name: "Users" });
+    await expect(userButton).toBeVisible();
+
+    await guestMouse.click(userButton);
+    await page.waitForTimeout(500);
+
+    // Park cursor out of the way
+    await guestMouse.moveToPosition(45, 0);
+    await page.waitForTimeout(3000); // Leave visible for capture buffers
+  });
+});
+
+// ============================================================================
+// WORKSPACE 2: RIGHT SIDE TILING
+// ============================================================================
+test.describe("Right Workspace Setup", () => {
+  // Scoped browser override for the right half of your screen
+  test.use({
+    launchOptions: {
+      headless: false,
+      args: ["--window-position=960,0", "--window-size=960,1080", "--no-sandbox"],
+    },
+  });
+
+  test("AM Mouse - Course Manager Flow", async ({ page }) => {
+    await page.goto("http://localhost:3001");
+
+    const AMMouse = new DemoMouse(page, "transparent");
+    await AMMouse.install();
+    await AMMouse.focus();
+
+    const signInButton = page.getByRole("button", { name: "Sign In" });
+    await AMMouse.click(signInButton);
+
+    const emailInput = page.getByPlaceholder("you@example.com").nth(0);
+    const passwordInput = page.getByPlaceholder("Enter your password").nth(0);
+
+    await AMMouse.type(emailInput, "am@gmail.com", 50);
+    await AMMouse.type(passwordInput, "12345678", 50);
+    await AMMouse.click(signInButton);
+
+    // 🌟 SPEC ASSERTION: Verify alternate authorization path page elements
+    const PCButton = page.getByRole("button", { name: "Pending Courses" });
+    await expect(PCButton).toBeVisible();
+
+    await AMMouse.click(PCButton);
+    await page.waitForTimeout(500);
+
+    // Park cursor out of the way
+    await AMMouse.moveToPosition(45, 0);
+    await page.waitForTimeout(3000); // Leave visible for capture buffers
+  });
+});
