@@ -4,6 +4,8 @@
 ```
 npm install -D playwright
 npx playwright install
+npm install -D @playwright/test
+
 node .\demoEDfull.js
 ```
 ---
