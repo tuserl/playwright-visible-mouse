@@ -1,0 +1,112 @@
+@import url("./mouseAssets.css");
+
+/* 1. The wrapper overlays the screen and handles a clean floating shadow */
+#demoMouseWrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 99999;
+
+  /* A single clean, realistic drop shadow */
+  filter: drop-shadow(3px 4px 5px rgba(0, 0, 0, 0.35));
+}
+
+/* 2. The inner element renders your custom character sprite */
+#demoMouse {
+  position: absolute;
+
+  /* Your larger layout dimensions */
+  width: 155px;
+  height: 155px;
+  pointer-events: none;
+
+  background-image: var(--anime-idle-img);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+
+  /* 🌟 FIX: Change Filter Mode from Bilinear to Point (No Filter) */
+  image-rendering: pixelated;
+  /* Works on Chrome, Edge, and Opera */
+  image-rendering: crisp-edges;
+  /* Fallback for Firefox and Safari */
+
+  /* Keeps the click hotspot pinned to the top-left corner of your image box */
+  transform-origin: 0% 0%;
+
+  /* 🌟 Hooking up the idle animation loop */
+  animation: anime-idle 3s ease-in-out infinite;
+
+  transition:
+    scale 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* 🌟 CLICKED STATE IMAGE 
+   This automatically swaps the image while clicking, then reverts back when done */
+#demoMouse.clicking {
+  background-image: var(--anime-click-img);
+}
+
+/* 🌟 IDLE KEYFRAMES
+   Gently floats her up 5 pixels and tilts her 3 degrees to feel organic and alive */
+@keyframes anime-idle {
+
+  0%,
+  100% {
+    translate: 0px 0px;
+    rotate: 0deg;
+  }
+
+  50% {
+    translate: 0px -5px;
+    /* Floats up slightly */
+    /* rotate: 3deg; */
+    rotate: 15deg;
+    /* Head/body tilts beautifully to the right */
+  }
+}
+
+@keyframes radar-pulse {
+  0% {
+    width: 4px;
+    height: 4px;
+    opacity: 1;
+  }
+
+  100% {
+    width: 50px;
+    height: 50px;
+    opacity: 0;
+  }
+}
+
+
+/* 3. The radar ripple effect that spawns on click */
+.click-ripple {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: transparent;
+  border: 2.5px solid #ff4a85;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  animation: radar-pulse 0.4s ease-out forwards;
+}
+
+@keyframes radar-pulse {
+  0% {
+    width: 4px;
+    height: 4px;
+    opacity: 1;
+  }
+
+  100% {
+    width: 50px;
+    height: 50px;
+    opacity: 0;
+  }
+}
