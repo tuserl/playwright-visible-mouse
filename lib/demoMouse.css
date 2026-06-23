@@ -14,11 +14,11 @@
   filter: drop-shadow(3px 4px 5px rgba(0, 0, 0, 0.35));
 }
 
-/* 2. The inner element renders your custom character sprite */
+/* 2. The inner element renders custom character sprite */
 #demoMouse {
   position: absolute;
 
-  /* Your larger layout dimensions */
+  /* larger layout dimensions */
   width: 155px;
   height: 155px;
   pointer-events: none;
@@ -34,7 +34,7 @@
   image-rendering: crisp-edges;
   /* Fallback for Firefox and Safari */
 
-  /* Keeps the click hotspot pinned to the top-left corner of your image box */
+  /* Keeps the click hotspot pinned to the top-left corner of image box */
   transform-origin: 0% 0%;
 
   /* 🌟 Hooking up the idle animation loop */
@@ -48,6 +48,13 @@
    This automatically swaps the image while clicking, then reverts back when done */
 #demoMouse.clicking {
   background-image: var(--anime-click-img);
+}
+
+/* 🌟 DRAGGING STATE IMAGE 
+   This automatically swaps the image while the user drags it */
+#demoMouse.dragging {
+  background-image: var(--anime-click-img);
+  /* Or replace this with var(--anime-drag-img) if you have a third PNG! */
 }
 
 /* 🌟 IDLE KEYFRAMES

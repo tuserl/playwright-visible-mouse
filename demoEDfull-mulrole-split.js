@@ -96,6 +96,6 @@ const DemoMouse = require("./lib/demoMouse");
   // Keep windows completely open for 3 seconds to review the dual animations
   await new Promise((resolve) => setTimeout(resolve, 3000));
 
-  console.log("Demo run complete. Cleaning up workspace instances...");
-  await Promise.all(browsers.map(b => b.close()));
+  //  console.log("Demo run complete. Cleaning up workspace instances...");
+  //  await Promise.all(browsers.map(b => b.close()));
 })();

@@ -4,7 +4,7 @@ node_modules/
 # Temporary / Scratchpad Files (from your directory)
 copy_me.txt
 # folder.txt
-*.bak
+*.bak.*
 
 # Logs
 npm-debug.log*
