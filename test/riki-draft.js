@@ -39,7 +39,7 @@ const DemoMouse = require("../lib/demoMouse");
   // USER INTERACTION
   await guestMouse.focus();
 
-  //  await guestPage.locator('input[name="btnK"]').click();
+  //  await page.locator('input[name="btnK"]').click();
   //const searchButton = guestPage.locator('input[name="btnK"]');
   //  const searchButton = guestPage.locator('input[name="btnK"]').first();
   //  await guestMouse.clickHumanRandom(searchButton);
@@ -78,31 +78,8 @@ const DemoMouse = require("../lib/demoMouse");
   const signInButton = guestPage.getByRole("button", { name: "ĐĂNG NHẬP" });
   await guestMouse.clickHumanRandom(signInButton); // 🌟 UPDATED: Using completely unique curve variants
 
-  // Locate the notification content
-  const notification = guestPage.locator('.el-notification__content', { hasText: 'Tài khoản hoặc mật khẩu không đúng' });
-
-  // Wait for it to appear
-  await notification.waitFor({ state: 'visible' });
-
-  // verify it is present
-  const isVisible = await notification.isVisible();
-
-  const colors = {
-    green: '\x1b[32m',
-    reset: '\x1b[0m'
-  };
-
-  console.log(`${colors.green}Test Passed: Login failed detected!${colors.reset}`);
-
-
-  // Conditional logging
-  if (isVisible) {
-    console.log(`${colors.green}Test Passed: Login failed notification detected!${colors.reset}`);
-  } else {
-    console.log(`\x1b[31mTest Failed: Notification was not visible!\x1b[0m`);
-  }
-
-
+  const userButton = guestPage.getByRole("button", { name: "Users" });
+  await guestMouse.clickHumanRandom(userButton); // 🌟 UPDATED: Using completely unique curve variants
 
   // 🌟 Simulated Human Idle Phase
   // Instead of freezing unnaturally, the mouse wanders to a random layout position
@@ -139,5 +116,5 @@ const DemoMouse = require("../lib/demoMouse");
   await new Promise((resolve) => setTimeout(resolve, 10000));
 
   console.log("Closing browser cleanly...");
-  await browser.close();
+  //  await browser.close();
 })();

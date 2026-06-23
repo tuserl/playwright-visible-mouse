@@ -6,6 +6,7 @@ npm install -D playwright
 npx playwright install
 npm install -D @playwright/test
 
+node .\test\riki
 node .\demoEDfull.js
 node .\demoHumanLikeRandom.js
 ```
