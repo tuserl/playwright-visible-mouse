@@ -123,6 +123,48 @@ node my-demo.js
 
 ---
 
+## Low-level inside a simple script
+
+You do not have to pick one style. `launch()` always returns **`mouse`** (a `DemoMouse`) and **`page`** (Playwright). Keep using `btn` / `field` for normal steps, and drop to `mouse` or `page` in the same file when you need finer control.
+
+```javascript
+const manager = require("playwright-visible-mouse");
+manager.setUrl("https://example.com");
+
+async function run() {
+  const { btn, field, mouse, page } = await manager.launch({ slowMo: 30 });
+
+  // --- high-level (recommended for most steps) ---
+  await btn("Sign In").click();
+  await field("you@example.com").type("admin@system.com");
+  await field("Enter your password").type("Admin@123");
+  await btn("Sign In").click();
+
+  // --- low-level mouse (same script, more control) ---
+  await mouse.clickHumanRandom(page.getByRole("button", { name: "Users" }));
+  await mouse.moveToPosition(45, 0);   // park cursor top-left for recording
+  await mouse.setLockState(false, false); // let user click around
+
+  // --- raw Playwright (escape hatch) ---
+  await page.waitForTimeout(1000);
+  await page.getByText("Settings").click();
+}
+
+run();
+```
+
+| When you need… | Use |
+|----------------|-----|
+| Click/type by visible label | `btn()`, `link()`, `field()` |
+| Human-like move/click on a specific element | `mouse.clickHumanRandom(locator)` |
+| Move cursor to x/y | `mouse.moveToPosition(x, y)` |
+| Hide/show cursor, pause, lock mode | `mouse.hide()`, `mouse.show()`, `pause()`, `mouse.setLockState()` |
+| Anything Playwright supports | `page.*` |
+
+`mouse` exposes all `DemoMouse` methods — see [DemoMouse methods](#demomouse-methods) below.
+
+---
+
 ## BrowserManager API
 
 Import the manager once. It is a singleton — `setUrl` applies to every `launch()` call until you change it.
