@@ -25,3 +25,4 @@ npx playwright show-report
 
 
 npx playwright test demoEDfull-mulrole-split.spec.js
+npx playwright test --headed --reporter=html demoBMsplit-async.spec.js

@@ -71,6 +71,15 @@
   /* Or replace this with var(--anime-drag-img) if you have a third PNG! */
 }
 
+
+/* For Hide Mouse */
+body.hide-cursor #demoMouseWrapper, 
+body.hide-cursor #demoMouse, 
+body.hide-cursor .click-ripple { 
+  display: none !important; 
+}
+
+
 /* 🌟 IDLE KEYFRAMES
    Gently floats her up 5 pixels and tilts her 3 degrees to feel organic and alive */
 @keyframes anime-idle {
