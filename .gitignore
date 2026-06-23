@@ -5,6 +5,8 @@ node_modules/
 copy_me.txt
 # folder.txt
 *.bak.*
+# Ignore all files ending in .bak
+*.bak
 
 # Logs
 npm-debug.log*
