@@ -31,12 +31,14 @@ The recommended way to write scripts is through **`BrowserManager`**: short, rea
 
 ## Installation
 
+**From npm** (use this in your own project):
+
 ```bash
 npm install playwright-visible-mouse
 npx playwright install chromium
 ```
 
-If you cloned this repo locally:
+**From a local clone** (this repo):
 
 ```bash
 npm install
@@ -45,12 +47,47 @@ npx playwright install chromium
 
 ---
 
+## Using as an npm package
+
+The package entry point is [`index.js`](index.js). It exports a ready-to-use **`BrowserManager` singleton** as the default, plus named exports when you need more control.
+
+### Import styles
+
+```javascript
+// ✅ Recommended — default export is the manager singleton
+const manager = require("playwright-visible-mouse");
+
+// Same singleton, named export
+const { BrowserManager } = require("playwright-visible-mouse");
+BrowserManager.setUrl("https://example.com");
+
+// Low-level cursor class (when you manage Playwright yourself)
+const { DemoMouse } = require("playwright-visible-mouse");
+```
+
+| Import | What you get |
+|--------|----------------|
+| `require("playwright-visible-mouse")` | `BrowserManager` singleton — call `.setUrl()` and `.launch()` directly |
+| `{ BrowserManager }` | Same singleton instance as the default export |
+| `{ DemoMouse }` | The `DemoMouse` class — pass a Playwright `page` and call `.install()` |
+
+All three can be combined in one line:
+
+```javascript
+const manager = require("playwright-visible-mouse");
+const { DemoMouse } = require("playwright-visible-mouse");
+```
+
+After install, write scripts in any folder — no need to copy `lib/` into your project.
+
+---
+
 ## Quick start (recommended)
 
 Create a file, for example `my-demo.js`:
 
 ```javascript
-const manager = require("./lib/browserManager");
+const manager = require("playwright-visible-mouse");
 
 // 1. Set the site you want to open
 manager.setUrl("https://example.com");
@@ -91,8 +128,13 @@ node my-demo.js
 Import the manager once. It is a singleton — `setUrl` applies to every `launch()` call until you change it.
 
 ```javascript
+const manager = require("playwright-visible-mouse");
+```
+
+When working inside this repo without publishing, you can also use:
+
+```javascript
 const manager = require("./lib/browserManager");
-// or from npm: const { BrowserManager: manager } = require("playwright-visible-mouse");
 ```
 
 ### `manager.setUrl(url)`
@@ -234,7 +276,7 @@ Useful when you want to inspect the page after login without closing the browser
 From `riki-new.js` — one browser, login flow, cursor parked top-left:
 
 ```javascript
-const manager = require("./lib/browserManager");
+const manager = require("playwright-visible-mouse");
 manager.setUrl("https://riki.edu.vn/");
 
 async function runGuestWorkflow() {
@@ -260,7 +302,7 @@ runGuestWorkflow();
 From `split4.js` — four browsers in a grid, each with different login credentials:
 
 ```javascript
-const manager = require("./lib/browserManager");
+const manager = require("playwright-visible-mouse");
 
 async function runWorkflows() {
   const flows = [
@@ -306,7 +348,7 @@ If you already manage Playwright yourself, use `DemoMouse` without `BrowserManag
 
 ```javascript
 const { chromium } = require("playwright");
-const DemoMouse = require("./lib/demoMouse");
+const { DemoMouse } = require("playwright-visible-mouse");
 
 (async () => {
   const browser = await chromium.launch({ headless: false, args: ["--start-maximized"] });
@@ -377,7 +419,7 @@ playwright-visible-mouse/
 │   ├── mouseAssets.css     # Cursor image URLs / base64
 │   ├── humanMouse.js       # Human-like movement methods
 │   └── mouseUtils.js       # Path generation utilities
-├── index.js                # Package entry point
+├── index.js                # npm entry — default export = BrowserManager singleton
 ├── riki-new.js             # Example: single-browser login demo
 ├── split4.js               # Example: 4 parallel role logins
 └── demo.js                 # Example: raw DemoMouse usage
@@ -386,6 +428,8 @@ playwright-visible-mouse/
 ---
 
 ## Run the included examples
+
+These scripts live in the repo and use local `require("./lib/...")` paths. In your own project, use `require("playwright-visible-mouse")` instead (see [Using as an npm package](#using-as-an-npm-package)).
 
 ```bash
 node riki-new.js
