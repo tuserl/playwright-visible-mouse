@@ -457,18 +457,52 @@ Layout and animations live in `lib/demoMouse.css`.
 
 ```text
 playwright-visible-mouse/
-├── lib/
-│   ├── browserManager.js   # BrowserManager + btn/link/field helpers
-│   ├── demoMouse.js        # Visible cursor core class
-│   ├── demoMouse.css       # Cursor layout and animations
-│   ├── mouseAssets.css     # Cursor image URLs / base64
-│   ├── humanMouse.js       # Human-like movement methods
-│   └── mouseUtils.js       # Path generation utilities
-├── index.js                # npm entry — default export = BrowserManager singleton
-├── riki-new.js             # Example: single-browser login demo
-├── split4.js               # Example: 4 parallel role logins
-└── demo.js                 # Example: raw DemoMouse usage
+│
+├── index.js                          # npm entry — default export = BrowserManager singleton
+├── package.json
+├── playwright-visible-mouse.json     # optional config (cursor images, arrow mode)
+│
+├── bin/
+│   └── cli.js                        # CLI: init | validate | doctor | set-image
+│
+├── lib/                              # core library (published to npm)
+│   ├── browserManager.js             # BrowserManager + btn / link / field helpers
+│   ├── demoMouse.js                  # visible cursor class
+│   ├── demoMouse.css                 # cursor layout and animations
+│   ├── demoMouse-arrow.css           # arrow-style cursor theme
+│   ├── humanMouse.js                 # human-like movement methods
+│   ├── mouseUtils.js                 # curved path generation
+│   ├── mouseConfig.js                # loads playwright-visible-mouse.json
+│   ├── configSchema.js               # config validation
+│   └── cli/
+│       ├── init.js                   # create config file
+│       ├── validate.js               # validate config
+│       ├── doctor.js                 # check Playwright / Node setup
+│       └── setImage.js               # update cursor sprite images
+│
+├── docs/
+│   └── configuration.md              # full config reference
+│
+├── demo/                             # extra examples (repo only)
+│   ├── logintest.js
+│   └── logintestspec.js
+│
+├── test/                             # ad-hoc test scripts (repo only)
+│   ├── google.js
+│   ├── riki.js
+│   └── riki-draft.js
+│
+├── riki-new.js                       # example: single-browser login
+├── split4.js                         # example: 4 parallel role logins
+├── mouse-visibility.js               # example: show / hide cursor
+└── demo.js                           # example: raw DemoMouse usage
 ```
+
+**Published to npm:** `index.js`, `lib/`, and `bin/` (see `package.json` `"files"`).
+
+**Repo only:** root example scripts, `demo/`, `test/`, and `docs/` — useful for learning and development, not shipped in the package.
+
+Configure cursor images via `playwright-visible-mouse.json` or the CLI (`npx playwright-visible-mouse init`). See [Custom cursor appearance](#custom-cursor-appearance) and [`docs/configuration.md`](docs/configuration.md).
 
 ---
 
