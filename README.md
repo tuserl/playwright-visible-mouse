@@ -271,36 +271,6 @@ Useful when you want to inspect the page after login without closing the browser
 
 ---
 
-## Low-level inside a simple script
-
-You do not have to pick one style. `launch()` always returns **`mouse`** (a `DemoMouse`) and **`page`** (Playwright). Keep using `btn` / `field` for normal steps, and drop to `mouse` or `page` in the same file when you need finer control.
-
-```javascript
-const manager = require("playwright-visible-mouse");
-manager.setUrl("https://example.com");
-
-async function run() {
-  const { btn, field, mouse, page } = await manager.launch({ slowMo: 30 });
-
-  // --- high-level (recommended for most steps) ---
-  await btn("Sign In").click();
-  await field("you@example.com").type("admin@system.com");
-  await field("Enter your password").type("Admin@123");
-  await btn("Sign In").click();
-
-  // --- low-level mouse (same script, more control) ---
-  await mouse.clickHumanRandom(page.getByRole("button", { name: "Users" }));
-  await mouse.moveToPosition(45, 0);   // park cursor top-left for recording
-  await mouse.setLockState(false, false); // let user click around
-
-  // --- raw Playwright (escape hatch) ---
-  await page.waitForTimeout(1000);
-  await page.getByText("Settings").click();
-}
-
-run();
-```
-
 | When you need… | Use |
 |----------------|-----|
 | Click/type by visible label | `btn()`, `link()`, `field()` |
@@ -324,7 +294,10 @@ manager.setUrl("https://riki.edu.vn/");
 async function runGuestWorkflow() {
   const { btn, link, field, mouse, pause } = await manager.launch({ mode: "maximized" });
 
-  await btn("Đóng").getIndex(0).click();
+  // Wait up to 2s to see if "Đóng" button appears, then click the first match
+  if (await btn("Đóng").exists(2000))
+    await btn("Đóng").getIndex(0).click();
+
   await link("HỌC ONLINE").click();
   await field("Nhập email tại đây").type("admin@system.com");
   await field("Nhập mật khẩu tại đây").type("Admin@123");
@@ -407,6 +380,36 @@ const { DemoMouse } = require("playwright-visible-mouse");
 
   await browser.close();
 })();
+```
+
+## Mixing High-Level and Low-Level APIs
+
+You do not have to choose a single approach. `launch()` always returns **`mouse`** (a `DemoMouse`) and **`page`** (Playwright). Keep using `btn` / `field` for normal steps, and drop to `mouse` or `page` in the same file when you need finer control.
+
+```javascript
+const manager = require("playwright-visible-mouse");
+manager.setUrl("https://example.com");
+
+async function run() {
+  const { btn, field, mouse, page } = await manager.launch({ slowMo: 30 });
+
+  // --- high-level (recommended for most steps) ---
+  await btn("Sign In").click();
+  await field("you@example.com").type("admin@system.com");
+  await field("Enter your password").type("Admin@123");
+  await btn("Sign In").click();
+
+  // --- low-level mouse (same script, more control) ---
+  await mouse.clickHumanRandom(page.getByRole("button", { name: "Users" }));
+  await mouse.moveToPosition(45, 0);   // park cursor top-left for recording
+  await mouse.setLockState(false, false); // let user click around
+
+  // --- raw Playwright (escape hatch) ---
+  await page.waitForTimeout(1000);
+  await page.getByText("Settings").click();
+}
+
+run();
 ```
 
 ### DemoMouse methods
@@ -492,7 +495,10 @@ Make sure the target URL is reachable. For `split4.js`, set `manager.setUrl("you
 4. **Park the cursor** with `moveToPosition(45, 0)` before ending a recording so it does not cover UI.
 5. **Use `slowMo: 20`** (or higher) when recording so actions are easier to follow.
 6. **Use `pause()`** to freeze the script and inspect the page; press Ctrl+C in the terminal to exit.
-
+7. **Full documentation** is available in the repository:
+   ```
+   https://github.com/tuserl/playwright-visible-mouse/tree/main/docs
+   ```
 ---
 
 ## License
