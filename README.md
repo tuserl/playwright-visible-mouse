@@ -1,6 +1,6 @@
 # Playwright Visible Mouse
 
-A Playwright helper library that shows a **visible on-screen cursor** while your script runs. The fake cursor moves smoothly, plays click animations, and stays in sync with real Playwright mouse actions — ideal for demos, tutorials, and screen recordings.
+A Playwright helper library that shows a **visible on-screen cursor** while your script runs. The cursor moves smoothly, plays click animations, and stays in sync with real Playwright mouse actions — ideal for demos, tutorials, and screen recordings.
 
 The recommended way to write scripts is through **`BrowserManager`**: short, readable calls like `btn("Sign In").click()` and `field("Email").type("hello@mail.com")`. If you have used Java-style page objects or fluent builders, this should feel familiar.
 
