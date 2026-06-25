@@ -4,6 +4,8 @@
 
 ### Added
 - Text element support for Browser Manager
+- Mouse Interaction Mode Setting 
+- img, checkbox, radio, select, tableCell, selectOption
 
 ## 1.0.2 - 2026-06-24
 
