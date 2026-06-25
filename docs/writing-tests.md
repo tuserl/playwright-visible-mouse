@@ -114,7 +114,7 @@ This file runs **two test cases in parallel** — one expects login to fail, one
 
 ```javascript
 const { test, expect } = require("@playwright/test");
-const manager = require("../lib/browserManager");
+const manager = require("playwright-visible-mouse");
 
 test.describe.configure({ mode: "parallel" });
 test.setTimeout(60000);
