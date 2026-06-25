@@ -1,6 +1,11 @@
 # Changelog
 
-## 1.0.2 - 2026-06-25
+## 1.0.3 - 2026-06-25
+
+### Added
+- Text element support for Browser Manager
+
+## 1.0.2 - 2026-06-24
 
 ### Added
 - Demo mouse configuration for custom sprite images
