@@ -393,7 +393,7 @@ Example specs in this repo:
 |------|-------------|
 | `test/test.spec.js` | BrowserManager + parallel login tests |
 
-Check out html element testing: [test folder](https://github.com/tuserl/playwright-visible-mouse/tree/main/test/html)
+Check out html element testing in test.spec.js: [test folder](https://github.com/tuserl/playwright-visible-mouse/tree/main/test/html)
 
 ---
 
