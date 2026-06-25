@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.5 - 2026-06-26
+
+### Added
+- Field key press 
+- Reload page
+
 ## 1.0.4 - 2026-06-25
 
 ### Added
