@@ -1,11 +1,15 @@
 # Changelog
 
+## 1.0.4 - 2026-06-25
+
+### Added
+- Mouse Interaction Mode Setting 
+- img, checkbox, radio, select, tableCell, selectOption
+
 ## 1.0.3 - 2026-06-25
 
 ### Added
 - Text element support for Browser Manager
-- Mouse Interaction Mode Setting 
-- img, checkbox, radio, select, tableCell, selectOption
 
 ## 1.0.2 - 2026-06-24
 
