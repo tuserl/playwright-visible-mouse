@@ -229,9 +229,11 @@ Each helper returns a `UIElement` with:
 
 | Method | Description |
 |--------|-------------|
-| `.click()` | Move cursor to element and click |
-| `.type(text)` | Click field, then type text character by character |
-| `.getIndex(n)` | Select the n-th matching element (0-based) |
+| `.click()` | Click the element using the current interaction mode (INSTANT, NORMAL, or HUMAN) |
+| `.type(text)` | Enter text into the element using the current interaction mode |
+| `.getIndex(n)` | Return a new UIElement representing the n-th matching element (0-based) |
+| `.loc()` | Get the underlying Playwright Locator |
+| `.exists(timeout)` | Returns true if the element becomes visible within the timeout; otherwise false |
 
 ---
 
