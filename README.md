@@ -31,6 +31,14 @@ The recommended way to write scripts is through **`BrowserManager`**: short, rea
 
 ## Installation
 
+### Create a new project
+
+```bash
+mkdir yourProjectName
+cd yourProjectName
+npm init -y
+````
+
 **From npm** (use this in your own project):
 
 ```bash
