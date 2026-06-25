@@ -540,10 +540,7 @@ Make sure the target URL is reachable. For `split4.js`, set `manager.setUrl("you
 4. **Park the cursor** with `moveToPosition(45, 0)` before ending a recording so it does not cover UI.
 5. **Use `slowMo: 20`** (or higher) when recording so actions are easier to follow.
 6. **Use `pause()`** to freeze the script and inspect the page; press Ctrl+C in the terminal to exit.
-7. **Full documentation** is available in the repository:
-   ```
-   https://github.com/tuserl/playwright-visible-mouse/tree/main/docs
-   ```
+7. **Full documentation** is available in the repository: [docs](https://github.com/tuserl/playwright-visible-mouse/tree/main/docs)
 ---
 
 ## License
