@@ -19,6 +19,8 @@ async function runGuestWorkflow() {
   const loginError = await text("Tài khoản hoặc mật khẩu không đúng !").exists();
   console.log("Login error exists:", loginError);
 
+  await page.goBack();
+
   await pause();                    // stop here for inspection
   await mouse.moveToPosition(45, 0);
 }

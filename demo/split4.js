@@ -1,13 +1,13 @@
-const manager = require("../lib/browserManager");
+const manager = require("../index");
 //manager.setUrl("url");
 
 async function runWorkflows() {
   // 1. Define flows with unique credentials and a 'doLogin' flag
   const flows = [
     { name: "Admin", index: 0, login: { email: "admin@system.com", pass: "Admin@123", doLogin: true } },
-    { name: "Academic Manager", index: 1, login: { email: "am@gmail.com", pass: "12345678", doLogin: true } },
-    { name: "Course Provider", index: 2, login: { email: "cp@gmail.com", pass: "12345678", doLogin: true } },
-    { name: "Learner", index: 3, login: { email: "learner@gmail.com", pass: "12345678", doLogin: true } }
+    { name: "Academic Manager", index: 1, login: { email: "Manager@system.com", pass: "Admin@123", doLogin: true } },
+    { name: "Course Provider", index: 2, login: { email: "Provider@system.com", pass: "Admin@123", doLogin: true } },
+    { name: "Learner", index: 3, login: { email: "Learner@system.com", pass: "Admin@123", doLogin: true } }
   ];
 
   const tasks = flows.map(async (f) => {

@@ -142,7 +142,7 @@ const manager = require("playwright-visible-mouse");
 When working inside this repo without publishing, you can also use:
 
 ```javascript
-const manager = require("./lib/browserManager");
+const manager = require("./index");
 ```
 
 ### `manager.setUrl(url)`

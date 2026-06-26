@@ -1,22 +1,35 @@
 const DemoMouse = require('./lib/demoMouse');
-const BrowserManager = require('./lib/browserManager');
+//const BrowserManager = require('./lib/browserManager');
 
-// 1. Export the instance as default (Convenience)
-module.exports = BrowserManager;
+const {
+  BrowserManager,
+  createLocator
+} = require("./lib/browserManager.js");
 
-// 2. Attach classes as properties (Flexibility)
+// Export the instance as default (Convenience)
+module.exports = {
+  BrowserManager,
+  createLocator
+};
+
+const manager = new BrowserManager();
+
+// default export
+module.exports = manager;
+module.exports.createLocator = createLocator;
+
+// extra exports
 module.exports.DemoMouse = DemoMouse;
 module.exports.BrowserManager = BrowserManager;
 
 //usage
 //const manager = require("playwright-visible-mouse");
 //const { DemoMouse } = require("playwright-visible-mouse");
+/*
+const {
+  expectRequiredSelectIfPresent
+} = require("playwright-visible-mouse/expectHelpers");
 
+expectRequiredSelectIfPresent(state);
+*/
 
-//module.exports = {
-//  DemoMouse,
-//  BrowserManager
-//};
-
-//usage
-//const { DemoMouse, BrowserManager } = require('playwright-visible-mouse');

@@ -1,6 +1,6 @@
 const { test, expect } = require("@playwright/test");
 const path = require("path");
-const manager = require("../../lib/browserManager");
+const manager = require("../../index");
 
 // Enable parallel execution for test cases
 test.describe.configure({ mode: "parallel" });
@@ -14,9 +14,9 @@ test("Full form and UI interaction", async () => {
   const fileUrl = `file://${absolutePath}`;
 
   const {
-    btn, field, checkbox, radio, select,
+    page, btn, field, checkbox, radio, select,
     link, img, tableCell, text, selectOption, setInteractionMode, InteractionMode
-  } = await manager.launch({ url: fileUrl });
+  } = await manager.launch({ url: fileUrl, slowMo: 0 });
 
 
   setInteractionMode(InteractionMode.NORMAL);
@@ -47,9 +47,20 @@ test("Full form and UI interaction", async () => {
   await img("Company logo").click();
 
   // 6. Table Interaction & Validation
-  await expect(tableCell("Alice", "Age").loc).toBeVisible();
-  await expect(tableCell("Alice", "Age").loc).toHaveText("22");
-  await tableCell("Alice", "Age").click();
+  const cell = await tableCell("Alice", "Age");
+  await expect(cell.loc).toBeVisible();
+  await expect(cell.loc).toHaveText("22");
+  await cell.click();
+  //alternatively u can write in number
+  const cellNumber1 = await tableCell(0, 1);
+  await cellNumber1.click();
+  const cellNumber2 = await tableCell("Alice", 0);
+  await cellNumber2.click();
+  const cellNumber3 = await tableCell(0, "Name");
+  await cellNumber3.click();
+
+
+  await page.waitForTimeout(2000);
 
   // 7. Submit and Final Validation
   await btn("Submit").click();

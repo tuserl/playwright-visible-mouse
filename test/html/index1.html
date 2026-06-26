@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>UI Test Demo</title>
+</head>
+
+<body>
+
+  <h1 id="title">Playwright UI Test Page</h1>
+
+  <!-- text locator -->
+  <p>Welcome User</p>
+
+
+  <!-- id locator -->
+  <input id="emailInput" placeholder="Email">
+
+
+  <!-- placeholder locator -->
+  <input placeholder="Password">
+
+
+  <!-- name locator -->
+  <input name="username" placeholder="Username">
+
+
+  <!-- label locator -->
+  <label for="remember">
+    Remember me
+  </label>
+  <input id="remember" type="checkbox">
+
+
+  <!-- radio + label -->
+  <label for="male">Male</label>
+  <input id="male" type="radio" name="gender">
+
+
+  <label for="female">Female</label>
+  <input id="female" type="radio" name="gender">
+
+
+  <!-- select -->
+  <label for="country">Country</label>
+  <select id="country">
+    <option value="jp">Japan</option>
+    <option value="us">USA</option>
+  </select>
+
+
+  <!-- class locator -->
+  <button class="primary submit-btn">
+    Submit
+  </button>
+
+
+  <!-- role locator -->
+  <button aria-label="Save Button">
+    Save
+  </button>
+
+
+  <!-- link -->
+  <a href="#" id="homeLink">
+    Home
+  </a>
+
+
+  <!-- image alt -->
+  <img src="logo.png" alt="Company logo" width="100" />
+
+
+  <!-- table -->
+  <table border="1">
+
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Age</th>
+        <th>Country</th>
+      </tr>
+    </thead>
+
+
+    <tbody>
+
+      <tr>
+        <td>John</td>
+        <td>20</td>
+        <td>USA</td>
+      </tr>
+
+
+      <tr>
+        <td>Alice</td>
+        <td>22</td>
+        <td>Japan</td>
+      </tr>
+
+
+    </tbody>
+
+  </table>
+
+
+  <div id="result">
+  </div>
+
+
+  <script>
+
+    document.querySelector(".submit-btn")
+      .onclick = () => {
+        document.querySelector("#result").innerText =
+          "Login Successful";
+      }
+
+  </script>
+
+
+</body>
+
+</html>

@@ -1,4 +1,4 @@
-const manager = require("../lib/browserManager");
+const manager = require("../index");
 //manager.setUrl("url");
 
 async function runWorkflows() {

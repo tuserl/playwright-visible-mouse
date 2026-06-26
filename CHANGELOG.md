@@ -1,10 +1,14 @@
 # Changelog
 
-## 1.0.5 - 2026-06-26
+## 1.1.0 - 2026-06-26
 
 ### Added
 - Field key press 
 - Reload page
+- Added `button()` selector support (see issue #1 for details)
+
+### Fixed
+- Normal Interaction Mode should be human type now
 
 ## 1.0.4 - 2026-06-25
 

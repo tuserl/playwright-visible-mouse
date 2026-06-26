@@ -3,12 +3,17 @@
   "version": "1.0.4",
   "description": "visible mouse for Playwright",
   "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./expectHelpers": "./testUtils/expectHelpers.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "files": [
     "lib/",
-    "bin/"
+    "bin/",
+    "testUtils/"
   ],
   "bin": {
     "playwright-visible-mouse": "./bin/cli.js"
