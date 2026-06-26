@@ -3,12 +3,22 @@
 ## 1.1.0 - 2026-06-26
 
 ### Added
-- Field key press 
-- Reload page
+
+- Added field key press support
+- Added page reload support
 - Added `button()` selector support (see issue #1 for details)
+- Added selector support to `BrowserManager`
+- Added unit tests and integration tests
+- Added `testUtils` for testing helpers
+
+### Changed
+
+- Changed `index.js` exports to use the package entry point instead of importing directly from `lib`
+- Updated demos
 
 ### Fixed
-- Normal Interaction Mode should be human type now
+
+- Fixed Normal Interaction Mode to use human-like typing
 
 ## 1.0.4 - 2026-06-25
 
