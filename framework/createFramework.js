@@ -16,27 +16,33 @@ module.exports = function (options = {}) {
   const session = new Session(config);
 
   const fixtures = {
-
     session: [async ({ }, use) => {
-
       await session.launch();
-
       await use(session);
-
       await session.close();
-
     }, { scope: "worker" }],
-
     page: async ({ session }, use, testInfo) => {
       await session.beforeEach(testInfo);
-
       try {
         await use(session.api.page);
       } finally {
         await session.afterEach();
       }
+    },
+    ui: async ({ session, page }, use) => {
+      await use({
+        btn: session.api.btn,
+        field: session.api.field,
+        text: session.api.text,
+        page,
+        mouse: session.api.mouse,
+        notify: session.api.notify,
+        InteractionMode: session.api.InteractionMode,
+        setInteractionMode: session.api.setInteractionMode,
+        selectOptionOrGetState:
+          session.api.selectOptionOrGetState
+      });
     }
-
   };
 
   for (const key of Session.exposed) {

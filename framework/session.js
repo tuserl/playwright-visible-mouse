@@ -2,7 +2,6 @@ const { BrowserManager } = require("../lib/browserManager");
 
 class Session {
 
-
   static exposed = [
     "btn",
     "field",
