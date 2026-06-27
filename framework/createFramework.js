@@ -1,72 +1,72 @@
 const base = require("@playwright/test");
-const createSuite = require("./createSuite");
+const defaults = require("./config");
+const Session = require("./session");
 
-module.exports = function createFramework(options = {}) {
+module.exports = function (options = {}) {
 
-  const suite = createSuite(options);
-
-  const test = base.test.extend({
-
-    session: async ({ }, use) => {
-      await use(suite);
-    },
-
-    page: async ({ }, use) => {
-      await use(suite.page);
-    },
-
-    mouse: async ({ }, use) => {
-      await use(suite.mouse);
-    },
-
-    btn: async ({ }, use) => {
-      await use(suite.btn);
-    },
-
-    field: async ({ }, use) => {
-      await use(suite.field);
-    },
-
-    text: async ({ }, use) => {
-      await use(suite.text);
-    },
-
-    checkbox: async ({ }, use) => {
-      await use(suite.checkbox);
-    },
-
-    radio: async ({ }, use) => {
-      await use(suite.radio);
-    },
-
-    select: async ({ }, use) => {
-      await use(suite.select);
-    },
-
-    img: async ({ }, use) => {
-      await use(suite.img);
-    },
-
-    link: async ({ }, use) => {
-      await use(suite.link);
-    },
-
-    notify: async ({ }, use) => {
-      await use(suite.notify);
-    },
-
-    InteractionMode: async ({ }, use) => {
-      await use(suite.InteractionMode);
+  const config = {
+    ...defaults,
+    ...options,
+    launch: {
+      ...defaults.launch,
+      ...(options.launch || {})
     }
+  };
 
-  });
+  const session = new Session(config);
 
-  return {
+  const fixtures = {
 
-    test,
+    session: [async ({ }, use) => {
 
-    expect: base.expect
+      await session.launch();
+
+      await use(session);
+
+      await session.close();
+
+    }, { scope: "worker" }],
+
+    page: async ({ session }, use, testInfo) => {
+
+      await session.beforeEach(testInfo);
+
+      await use(session.api.page);
+
+      await session.afterEach();
+
+    }
 
   };
 
+  for (const key of [
+    "btn",
+    "field",
+    "text",
+    "checkbox",
+    "radio",
+    "select",
+    "img",
+    "link",
+    "mouse",
+    "notify",
+    "InteractionMode",
+    "tableCell",
+    "selectOption",
+    "selectOptionOrGetState",
+    "pause"
+  ]) {
+
+    fixtures[key] = async ({ session }, use) => {
+      await use(session.api[key]);
+    };
+
+  }
+
+  const test = base.test.extend(fixtures);
+
+  return {
+    test,
+    expect: base.expect
+  };
 };

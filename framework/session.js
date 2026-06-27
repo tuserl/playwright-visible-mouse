@@ -1,64 +1,41 @@
 const { BrowserManager } = require("../lib/browserManager");
-const manager = new BrowserManager();
 
 class Session {
-
   constructor(config) {
     this.config = config;
-    this.instance = null;
+    this.manager = new BrowserManager();
+    this.api = null;
   }
 
   async launch() {
-
-    manager.setUrl(this.config.url);
-
-    this.instance = await manager.launch(
-      this.config.launch
-    );
-
-    return this.instance;
+    this.manager.setUrl(this.config.url);
+    this.api = await this.manager.launch(this.config.launch);
   }
 
-  async goto() {
-    await this.instance.page.goto(this.config.url);
-  }
+  async beforeEach(testInfo) {
+    await this.api.page.goto(this.config.url);
 
-  async setup(testInfo) {
-
-    await this.goto();
-
-    await this.instance.setInteractionMode(
-      this.instance.InteractionMode[
-      this.config.interactionMode
-      ]
+    await this.api.setInteractionMode(
+      this.api.InteractionMode[this.config.interactionMode]
     );
 
     if (this.config.notify) {
-      await this.instance.notify(testInfo.title);
+      await this.api.notify(testInfo.title);
     }
   }
 
-  async cleanup() {
-
-    if (!this.config.notify)
-      return;
-
-    await this.instance.page.waitForTimeout(
-      this.config.notifyDelay
-    );
+  async afterEach() {
+    if (this.config.notify) {
+      await this.api.page.waitForTimeout(
+        this.config.notifyDelay
+      );
+    }
   }
 
   async close() {
-
-    if (this.instance?.browser)
-      await this.instance.browser.close();
-
+    if (this.api?.browser)
+      await this.api.browser.close();
   }
-
-  get api() {
-    return this.instance;
-  }
-
 }
 
 module.exports = Session;

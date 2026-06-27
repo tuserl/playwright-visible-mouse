@@ -28,22 +28,23 @@ function exported(options) {
 }
 
 // Old API
-exported.manager = manager;
-exported.BrowserManager = BrowserManager;
-exported.createLocator = createLocator;
-exported.InteractionMode = InteractionMode;
-exported.UIElement = UIElement;
-exported.DemoMouse = DemoMouse;
+//exported.manager = manager;
+//exported.BrowserManager = BrowserManager;
+//exported.createLocator = createLocator;
+//exported.InteractionMode = InteractionMode;
+//exported.UIElement = UIElement;
+//exported.DemoMouse = DemoMouse;
 
 // New API
 module.exports = exported;
 
 
 // framework export
-module.exports.createSuite = require("./framework/createSuite");
-module.exports.test = require("./framework/test").test;
-module.exports.expect = require("./framework/test").expect;
-module.exports.configure = require("./framework/test").configure;
+//const createFramework = require("./framework/createFramework");
+//module.exports = createFramework;
+//module.exports.test = require("./framework/test").test;
+//module.exports.expect = require("./framework/test").expect;
+//module.exports.configure = require("./framework/test").configure;
 
 
 // usage
