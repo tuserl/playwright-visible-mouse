@@ -13,7 +13,8 @@
   "files": [
     "lib/",
     "bin/",
-    "testUtils/"
+    "testUtils/",
+    "ui.gif"
   ],
   "bin": {
     "playwright-visible-mouse": "./bin/cli.js"

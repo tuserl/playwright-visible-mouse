@@ -1,79 +1,63 @@
-/* Simple cute notification for test names - no external images */
 #demoNotificationWrapper {
   position: fixed;
-  top: 16px;
-  right: 16px;
-  z-index: 99999;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 999999;
+  width: 900px;
   pointer-events: none;
 }
 
 .demo-notification {
-  width: 320px;
-  max-width: calc(100vw - 40px);
-  background: linear-gradient(135deg, #fff, #f8f8ff);
-  border-radius: 12px;
-  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.12);
   display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px;
-  transform: translateY(-10px) scale(0.98);
+  align-items: flex-end;
+  /* Pull the box slightly left to overlap the avatar */
+  /* gap: -20px;*/
   opacity: 0;
-  transition: all 260ms cubic-bezier(.2, .9, .3, 1);
-  pointer-events: auto;
+  transition: opacity 0.5s ease-in-out;
 }
 
 .demo-notification.show {
-  transform: translateY(0) scale(1);
   opacity: 1;
 }
 
 .demo-notification .avatar {
+  width: 160px;
+  height: 200px;
   object-fit: cover;
-  /* Ensures the image doesn't look stretched */
-  width: 48px;
-  height: 48px;
-  border-radius: 10px;
-  background: linear-gradient(180deg, #ffd7e6, #ffdfe8);
-  box-shadow: inset 0 -4px 8px rgba(0, 0, 0, 0.04);
-  flex-shrink: 0;
-  margin-left: 4px;
-  position: relative;
+  /* Makes black background transparent */
+  mix-blend-mode: screen;
+  /* Adds a subtle pop */
+  filter: drop-shadow(0 0 10px rgba(255, 121, 198, 0.3));
+  z-index: 2;
 }
 
-.demo-notification .avatar::after {
-  content: '';
-  position: absolute;
-  left: 8px;
-  top: 8px;
-  width: 32px;
-  height: 32px;
-  border-radius: 6px;
-  background: linear-gradient(180deg, #ffffff66, #ffffff22);
+.demo-notification .box {
+  flex-grow: 1;
+  background: rgba(40, 42, 54, 0.9);
+  /* Slightly cooler dark tone */
+  border: 2px solid #bd93f9;
+  border-radius: 12px;
+  padding: 25px;
+  color: white;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  margin-left: -20px;
+  /* Overlap effect */
+  z-index: 1;
 }
 
-.demo-notification .content {
-  display: flex;
-  flex-direction: column;
-}
-
-.demo-notification .title {
-  font-weight: 700;
-  font-size: 13px;
-  color: #0b2545;
+.demo-notification .nameplate {
+  font-weight: 800;
+  color: #ff79c6;
+  margin-bottom: 12px;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
 }
 
 .demo-notification .msg {
-  font-size: 12px;
-  color: #254160;
-  opacity: 0.9;
-}
-
-@media (max-width: 420px) {
-  .demo-notification {
-    width: 90vw;
-  }
+  font-size: 1.4rem;
+  line-height: 1.5;
+  text-shadow: 1px 1px 2px #000;
 }

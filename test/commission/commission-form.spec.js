@@ -15,17 +15,13 @@ manager.setUrl("http://localhost:9999/CommissionWebApp/index.jsp");
 // 1. Launch ONCE for the entire test file
 test.beforeAll(async () => {
   session = await manager.launch({ mode: "maximized", headless: false });
-
-  // Ensure the notification system is injected into the page
-  if (session.notification && typeof session.notification.install === 'function') {
-    await session.notification.install();
-  }
 });
 
 test.beforeEach(async ({ }, testInfo) => {
   // Navigate
   await session.page.goto("http://localhost:9999/CommissionWebApp/index.jsp");
 
+  await session.setInteractionMode(session.InteractionMode.HUMAN);
   await session.notify(testInfo.title);
 });
 
@@ -36,19 +32,27 @@ test.afterAll(async () => {
   }
 });
 
-
 async function calculateCommission(employeeType, itemType, customerType, itemPrice) {
-  const { btn, field, selectOptionOrGetState, text, page, InteractionMode, setInteractionMode } = session;
+  const { btn, field, selectOptionOrGetState, text, page, mouse, InteractionMode, setInteractionMode } = session;
   //  setInteractionMode(InteractionMode.INSTANT);
-  setInteractionMode(InteractionMode.NORMAL);
   expectRequiredSelectIfPresent(await selectOptionOrGetState("employeeType", employeeType));
+  setInteractionMode(InteractionMode.NORMAL);
   expectRequiredSelectIfPresent(await selectOptionOrGetState("itemType", itemType));
   expectRequiredSelectIfPresent(await selectOptionOrGetState("customerType", customerType));
   if (itemPrice != null) await field("Enter item price...").type(itemPrice.toString());
   await btn("Calculate Commission").click();
-  if (!(await btn("Calculate Again").exists(1000))) return null;
-  const result = parseFloat((await text({ class: "commission-value" }).loc.textContent()).replace(/[$,]/g, ""));
+  await mouse.randomMoveHuman();
   await page.waitForTimeout(500);
+  await mouse.randomMoveHuman();
+  //  await Promise.all(Array(3).fill().map(() => mouse.randomMoveHuman()));
+  //  await Array(3).fill().reduce(p => p.then(() => mouse.randomMoveHuman()), Promise.resolve());
+  if (!(await btn("Calculate Again").exists(1000))) return null;
+
+  const result = parseFloat((await text({ class: "commission-value" }).loc.textContent()).replace(/[$,]/g, ""));
+
+  await session.notify(`$${result} ~ (〃￣︶￣)人(￣︶￣〃)`);
+  await page.waitForTimeout(3500);
+
   return result;
 }
 
