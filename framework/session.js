@@ -1,6 +1,27 @@
 const { BrowserManager } = require("../lib/browserManager");
 
 class Session {
+
+
+  static exposed = [
+    "btn",
+    "field",
+    "text",
+    "checkbox",
+    "radio",
+    "select",
+    "img",
+    "link",
+    "mouse",
+    "notify",
+    "InteractionMode",
+    "setInteractionMode",
+    "tableCell",
+    "selectOption",
+    "selectOptionOrGetState",
+    "pause"
+  ];
+
   constructor(config) {
     this.config = config;
     this.manager = new BrowserManager();

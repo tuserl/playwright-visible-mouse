@@ -28,41 +28,30 @@ module.exports = function (options = {}) {
     }, { scope: "worker" }],
 
     page: async ({ session }, use, testInfo) => {
-
       await session.beforeEach(testInfo);
 
-      await use(session.api.page);
-
-      await session.afterEach();
-
+      try {
+        await use(session.api.page);
+      } finally {
+        await session.afterEach();
+      }
     }
 
   };
 
-  for (const key of [
-    "btn",
-    "field",
-    "text",
-    "checkbox",
-    "radio",
-    "select",
-    "img",
-    "link",
-    "mouse",
-    "notify",
-    "InteractionMode",
-    "tableCell",
-    "selectOption",
-    "selectOptionOrGetState",
-    "pause"
-  ]) {
+  for (const key of Session.exposed) {
 
     fixtures[key] = async ({ session }, use) => {
+      if (!session.api[key]) {
+        throw new Error(
+          `Missing API export: ${key}`
+        );
+      }
+
       await use(session.api[key]);
     };
 
   }
-
   const test = base.test.extend(fixtures);
 
   return {
