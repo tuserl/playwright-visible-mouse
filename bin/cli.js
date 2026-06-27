@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 
-const cmd = process.argv[2];
+const args = process.argv.slice(2);
+const cmd = args[0];
 
 switch (cmd) {
+
   case "init":
     require("../lib/cli/init");
     break;
@@ -19,14 +21,42 @@ switch (cmd) {
     require("../lib/cli/setImage");
     break;
 
+  case "g":
+  case "generate": {
+    const schematic = args[1];
+    const name = args[2];
+
+    if (!schematic || !name) {
+      console.log(
+        "Usage: playwright-visible-mouse g <schematic> <name>"
+      );
+      process.exit(1);
+    }
+
+    require("../lib/cli/generate")({
+      schematic,
+      name,
+      options: args.slice(3),
+    });
+
+    break;
+  }
+
   default:
     console.log(`
 playwright-visible-mouse CLI
 
 Commands:
-  init         Create config
-  validate     Validate config
-  doctor       Check environment
-  set-image    Update sprite image
-    `);
+
+  init
+  validate
+  doctor
+  set-image
+
+  g <type> <name>
+
+Examples:
+
+  npx playwright-visible-mouse g test LoginTest
+`);
 }

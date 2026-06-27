@@ -21,14 +21,33 @@ module.exports = function (options = {}) {
       await use(session);
       await session.close();
     }, { scope: "worker" }],
+
     page: async ({ session }, use, testInfo) => {
       await session.beforeEach(testInfo);
+
+      if (config.beforeEach) {
+        await config.beforeEach({
+          ...session.api,
+          page: session.api.page,
+          testInfo
+        });
+      }
+
       try {
         await use(session.api.page);
       } finally {
         await session.afterEach();
+
+        if (config.afterEach) {
+          await config.afterEach({
+            ...session.api,
+            page: session.api.page,
+            testInfo
+          });
+        }
       }
     },
+
     ui: async ({ session, page }, use, testInfo) => {
       await use({
         ...session.api,

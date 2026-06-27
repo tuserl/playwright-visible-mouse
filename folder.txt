@@ -1,9 +1,22 @@
-playwright-demo/
-│
-├── lib/
-│   └── demoMouse.js
-│
-├── demo.js
-│
-└── react-app/
-    └── src/
+eza --tree --git-ignore
+eza --tree --git-ignore --level=3
+
+.
+├── bin
+│   └── cli.js
+├── docs
+│   ├── configuration.md
+│   └── writing-tests.md
+├── framework
+│   ├── config.js
+│   └── session.js
+├── lib
+│   ├── browserManager.js
+│   ├── demoMouse.js
+│   └── mouseUtils.js
+├── test
+│   ├── commission
+│   ├── fw
+│   └── unit-test
+├── index.js
+└── package.json
