@@ -1,7 +1,7 @@
 const { test, expect } = require("@playwright/test");
 const path = require("path");
 
-const manager = require("../../index");
+const manager = require("../../../index");
 
 
 test.describe.configure({ mode: "parallel" });

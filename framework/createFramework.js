@@ -29,35 +29,34 @@ module.exports = function (options = {}) {
         await session.afterEach();
       }
     },
-    ui: async ({ session, page }, use) => {
+    ui: async ({ session, page }, use, testInfo) => {
       await use({
-        btn: session.api.btn,
-        field: session.api.field,
-        text: session.api.text,
+        ...session.api,
         page,
-        mouse: session.api.mouse,
-        notify: session.api.notify,
-        InteractionMode: session.api.InteractionMode,
-        setInteractionMode: session.api.setInteractionMode,
-        selectOptionOrGetState:
-          session.api.selectOptionOrGetState
+        testInfo
       });
     }
   };
 
-  for (const key of Session.exposed) {
+  const reservedFixtures = [
+    "session",
+    "page"
+  ];
 
+  for (const key of Session.exposed) {
+    if (reservedFixtures.includes(key)) {
+      continue;
+    }
     fixtures[key] = async ({ session }, use) => {
       if (!session.api[key]) {
         throw new Error(
           `Missing API export: ${key}`
         );
       }
-
       await use(session.api[key]);
     };
-
   }
+
   const test = base.test.extend(fixtures);
 
   return {

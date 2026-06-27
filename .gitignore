@@ -1,3 +1,5 @@
+draftREADME/
+
 # Dependencies
 node_modules/
 
@@ -26,4 +28,13 @@ Thumbs.db
 
 *.log
 
-draftREADME/
+# Jest
+coverage/
+.nyc_output/
+
+# Jest cache
+jest-cache/
+.cache/jest/
+
+# Snapshots (optional)
+*.snap

@@ -13,8 +13,8 @@ const EmployeeType = Object.freeze({ SALARIED: "SALARIED", NON_SALARIED: "NON_SA
 const ItemType = Object.freeze({ STANDARD: "STANDARD", BONUS: "BONUS", OTHER: "OTHER" });
 const CustomerType = Object.freeze({ REGULAR: "REGULAR", NON_REGULAR: "NON_REGULAR" });
 
-async function calculateCommission({ btn, field, selectOptionOrGetState, text, page, mouse, notify, InteractionMode, setInteractionMode }
-  , employeeType, itemType, customerType, itemPrice) {
+async function calculateCommission(ui, employeeType, itemType, customerType, itemPrice) {
+  const { btn, field, selectOptionOrGetState, text, page, mouse, notifyWait, InteractionMode, setInteractionMode } = ui;
   expectRequiredSelectIfPresent(await selectOptionOrGetState("employeeType", employeeType));
   setInteractionMode(InteractionMode.NORMAL);
   expectRequiredSelectIfPresent(await selectOptionOrGetState("itemType", itemType));
@@ -26,12 +26,74 @@ async function calculateCommission({ btn, field, selectOptionOrGetState, text, p
   await mouse.randomMoveHuman();
   if (!(await btn("Calculate Again").exists(1000))) return null;
   const result = parseFloat((await text({ class: "commission-value" }).loc.textContent()).replace(/[$,]/g, ""));
-  await notify(`$${result} ~ (〃￣︶￣)人(￣︶￣〃)`);
-  await page.waitForTimeout(3500);
+  await notifyWait(`${ui.testInfo.title}: $${result} ~ (〃￣︶￣)人(￣︶￣〃)`);
   return result;
 }
+//test.describe.configure({ mode: "parallel" });
 
-test("TC08", async ({ ui }) => {
-  expect(await calculateCommission(ui, EmployeeType.SALARIED, ItemType.BONUS, CustomerType.REGULAR, 10000)).toBe(0);
+//================================= TEST CASES =========================================
+
+test("TC01", async ({ ui }) => {
+  expect(await calculateCommission(ui, null, ItemType.STANDARD, CustomerType.REGULAR, 1000))
+    .toBe(null);
 });
 
+test("TC02", async ({ ui }) => {
+  expect(await calculateCommission(ui, EmployeeType.SALARIED, null, CustomerType.REGULAR, 1000))
+    .toBe(null);
+});
+
+test("TC03", async ({ ui }) => {
+  expect(await calculateCommission(ui, EmployeeType.SALARIED, ItemType.STANDARD, null, 1000))
+    .toBe(null);
+});
+
+test("TC04", async ({ ui }) => {
+  expect(await calculateCommission(ui, EmployeeType.SALARIED, ItemType.STANDARD, CustomerType.REGULAR, null))
+    .toBe(null);
+});
+
+test("TC05", async ({ ui }) => {
+  expect(await calculateCommission(ui, EmployeeType.SALARIED, ItemType.STANDARD, CustomerType.REGULAR, 0))
+    .toBe(null);
+});
+
+test("TC06", async ({ ui }) => {
+  expect(await calculateCommission(ui, EmployeeType.NON_SALARIED, ItemType.OTHER, CustomerType.NON_REGULAR, 10000))
+    .toBe(1000);
+});
+
+test("TC07", async ({ ui }) => {
+  expect(await calculateCommission(ui, EmployeeType.NON_SALARIED, ItemType.OTHER, CustomerType.NON_REGULAR, 10001))
+    .toBe(500.05);
+});
+
+test("TC08", async ({ ui }) => {
+  expect(await calculateCommission(ui, EmployeeType.SALARIED, ItemType.BONUS, CustomerType.REGULAR, 10000))
+    .toBe(0);
+});
+
+test("TC09", async ({ ui }) => {
+  expect(await calculateCommission(ui, EmployeeType.SALARIED, ItemType.BONUS, CustomerType.NON_REGULAR, 1000))
+    .toBe(50);
+});
+
+test("TC10", async ({ ui }) => {
+  expect(await calculateCommission(ui, EmployeeType.SALARIED, ItemType.BONUS, CustomerType.NON_REGULAR, 10000))
+    .toBe(25);
+});
+
+test("TC11", async ({ ui }) => {
+  expect(await calculateCommission(ui, EmployeeType.NON_SALARIED, ItemType.BONUS, CustomerType.NON_REGULAR, 1000))
+    .toBe(100);
+});
+
+test("TC12", async ({ ui }) => {
+  expect(await calculateCommission(ui, EmployeeType.NON_SALARIED, ItemType.BONUS, CustomerType.NON_REGULAR, 10000))
+    .toBe(75);
+});
+
+test("TC13", async ({ ui }) => {
+  expect(await calculateCommission(ui, EmployeeType.SALARIED, ItemType.OTHER, CustomerType.NON_REGULAR, 1000))
+    .toBe(0);
+});

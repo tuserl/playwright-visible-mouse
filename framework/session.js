@@ -3,6 +3,8 @@ const { BrowserManager } = require("../lib/browserManager");
 class Session {
 
   static exposed = [
+    "browser",
+    "page",
     "btn",
     "field",
     "text",
@@ -13,6 +15,7 @@ class Session {
     "link",
     "mouse",
     "notify",
+    "notifyWait",
     "InteractionMode",
     "setInteractionMode",
     "tableCell",
@@ -20,6 +23,7 @@ class Session {
     "selectOptionOrGetState",
     "pause"
   ];
+
 
   constructor(config) {
     this.config = config;
@@ -46,9 +50,8 @@ class Session {
 
   async afterEach() {
     if (this.config.notify) {
-      await this.api.page.waitForTimeout(
-        this.config.notifyDelay
-      );
+      //      //not need now but keep here
+      //      await this.api.page.waitForTimeout(this.config.notifyDelay);
     }
   }
 
