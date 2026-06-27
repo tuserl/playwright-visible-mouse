@@ -14,17 +14,51 @@ module.exports = {
   createLocator
 };
 
-const manager = new BrowserManager();
 
 // default export
-module.exports = manager;
-module.exports.createLocator = createLocator;
-module.exports.InteractionMode = InteractionMode;
-module.exports.UIElement = UIElement;
+//const manager = new BrowserManager();
+//for manager older
+//module.exports = manager;
+
+const createFramework = require("./framework/createFramework");
+module.exports = createFramework;
+
+function exported(options) {
+  return createFramework(options);
+}
+
+// Old API
+exported.manager = manager;
+exported.BrowserManager = BrowserManager;
+exported.createLocator = createLocator;
+exported.InteractionMode = InteractionMode;
+exported.UIElement = UIElement;
+exported.DemoMouse = DemoMouse;
+
+// New API
+module.exports = exported;
+
+
+// framework export
+module.exports.createSuite = require("./framework/createSuite");
+module.exports.test = require("./framework/test").test;
+module.exports.expect = require("./framework/test").expect;
+module.exports.configure = require("./framework/test").configure;
+
+
+// usage
+// const { test } = require("playwright-visible-mouse")({
+//    url: "..."
+//});
+// const manager = require("playwright-visible-mouse").manager;
+
+//module.exports.createLocator = createLocator;
+//module.exports.InteractionMode = InteractionMode;
+//module.exports.UIElement = UIElement;
 
 // extra exports
-module.exports.DemoMouse = DemoMouse;
-module.exports.BrowserManager = BrowserManager;
+//module.exports.DemoMouse = DemoMouse;
+//module.exports.BrowserManager = BrowserManager;
 
 //usage
 //const manager = require("playwright-visible-mouse");
