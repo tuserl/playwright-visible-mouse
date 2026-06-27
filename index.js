@@ -10,18 +10,39 @@ const {
 const createFramework = require("./framework/createFramework");
 
 
+// old singleton manager
+const manager = new BrowserManager();
+
+
+// new API
 function exported(options) {
   return createFramework(options);
 }
 
 
-// New framework API
+// default export
 module.exports = exported;
 
 
-// Extra APIs
+// new API exports
 module.exports.BrowserManager = BrowserManager;
 module.exports.createLocator = createLocator;
 module.exports.InteractionMode = InteractionMode;
 module.exports.UIElement = UIElement;
 module.exports.DemoMouse = DemoMouse;
+
+
+// old API compatibility
+module.exports.manager = manager;
+
+
+// allow:
+// const manager = require("playwright-visible-mouse");
+module.exports.setUrl = (...args) =>
+  manager.setUrl(...args);
+
+module.exports.launch = (...args) =>
+  manager.launch(...args);
+
+
+// Now both old and new work
