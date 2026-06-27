@@ -1,6 +1,6 @@
 const { test, expect } = require("@playwright/test");
 const manager = require("playwright-visible-mouse");
-const { createLocator } = require("../../index");
+const { createLocator } = require("../../../index");
 
 test.beforeEach(async ({ page }) => {
   await page.setContent(`

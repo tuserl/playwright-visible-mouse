@@ -3,7 +3,9 @@ const DemoMouse = require('./lib/demoMouse');
 
 const {
   BrowserManager,
-  createLocator
+  createLocator,
+  InteractionMode,
+  UIElement
 } = require("./lib/browserManager.js");
 
 // Export the instance as default (Convenience)
@@ -17,6 +19,8 @@ const manager = new BrowserManager();
 // default export
 module.exports = manager;
 module.exports.createLocator = createLocator;
+module.exports.InteractionMode = InteractionMode;
+module.exports.UIElement = UIElement;
 
 // extra exports
 module.exports.DemoMouse = DemoMouse;
