@@ -3,7 +3,10 @@
 ## 1.2.0 - 2026-06-27
 
 ### Added
--- Added demoNotification
+
+- Added `demoNotification` for displaying test execution messages in the browser.
+- Added a new Testing Framework with automatic Playwright fixture generation and session management.
+- Added CLI commands for generating test files and page objects.
 
 ## 1.1.0 - 2026-06-26
 
