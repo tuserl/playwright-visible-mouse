@@ -1,10 +1,11 @@
 # Changelog
 
-## 1.2.2 - 2026-06-28
+## 1.3.0 - 2026-06-28
 
 ### Added
 
-- Added Custom Screen Resolution For mode split
+- Added `autoTile` to automatically assign window positions based on the Playwright worker.
+- Added support for custom screen resolutions in `split2` and `split4` modes.
 
 ## 1.2.1 - 2026-06-28
 
