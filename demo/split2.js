@@ -1,5 +1,5 @@
 const manager = require("../index");
-//manager.setUrl("url");
+manager.setUrl("http://localhost:3001");
 
 async function runWorkflows() {
   // 1. Define flows with unique credentials and a 'doLogin' flag

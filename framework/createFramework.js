@@ -15,12 +15,50 @@ module.exports = function (options = {}) {
 
   const session = new Session(config);
 
-  const fixtures = {
-    session: [async ({ }, use) => {
+  const sessionFixture = config.reuseBrowser
+    ? [async ({ }, use, workerInfo) => {
+
+      console.log(
+        `[WORKER ${workerInfo.workerIndex + 1}, configured max = ${workerInfo.config.workers}] Browser session started`
+      );
+
       await session.launch();
-      await use(session);
-      await session.close();
-    }, { scope: "worker" }],
+
+      try {
+        await use(session);
+      } finally {
+        console.log(
+          `[WORKER ${workerInfo.workerIndex + 1}, configured max = ${workerInfo.config.workers}] Browser session closed`
+        );
+
+        await session.close();
+      }
+
+    }, { scope: "worker" }]
+
+    : async ({ launch }, use, workerInfo) => {
+
+      console.log(
+        `[WORKER ${workerInfo.workerIndex + 1}, configured max = ${workerInfo.config.workers}] Browser launching`
+      );
+
+      await session.launch(launch);
+
+      try {
+        await use(session);
+      } finally {
+        console.log(
+          `[WORKER ${workerInfo.workerIndex + 1}, configured max = ${workerInfo.config.workers}] Browser closed`
+        );
+
+        await session.close();
+      }
+    };
+
+  const fixtures = {
+    launch: [{}, { option: true }],
+
+    session: sessionFixture,
 
     page: async ({ session }, use, testInfo) => {
       await session.beforeEach(testInfo);
@@ -59,7 +97,8 @@ module.exports = function (options = {}) {
 
   const reservedFixtures = [
     "session",
-    "page"
+    "page",
+    "browser"
   ];
 
   for (const key of Session.exposed) {

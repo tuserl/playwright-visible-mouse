@@ -31,9 +31,13 @@ class Session {
     this.api = null;
   }
 
-  async launch() {
+  async launch(launchOverrides = {}) {
     this.manager.setUrl(this.config.url);
-    this.api = await this.manager.launch(this.config.launch);
+
+    this.api = await this.manager.launch({
+      ...this.config.launch,
+      ...launchOverrides
+    });
   }
 
   async beforeEach(testInfo) {

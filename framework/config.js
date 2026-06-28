@@ -2,6 +2,8 @@ module.exports = {
 
   url: null,
 
+  reuseBrowser: false,
+
   launch: {
     mode: "maximized",
     headless: false,

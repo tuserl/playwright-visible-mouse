@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.2.1 - 2026-06-28
+
+### Fixed
+
+- Fixed `tileIndex` support by adding worker-aware browser session handling in the framework.
+
 ## 1.2.0 - 2026-06-27
 
 ### Added
