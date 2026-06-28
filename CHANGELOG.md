@@ -4,8 +4,9 @@
 
 ### Added
 
-- Added `autoTile` to automatically assign window positions based on the Playwright worker.
+- Added `autoTile` to automatically assign window positions based on Playwright worker `parallelIndex`.
 - Added support for custom screen resolutions in `split2` and `split4` modes.
+- Added `reuseBrowser` framework option for reusing browser instances across tests within the same worker.
 
 ## 1.2.1 - 2026-06-28
 

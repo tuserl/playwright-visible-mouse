@@ -33,13 +33,13 @@ module.exports = function (options = {}) {
   }
 
   const sessionFixture = config.reuseBrowser
-    ? [async ({ launch }, use, workerInfo) => {
+    ? [async ({ }, use, workerInfo) => {
 
       console.log(
         `[WORKER ${workerInfo.workerIndex + 1}, configured max = ${workerInfo.config.workers}] Browser session started`
       );
 
-      const autoLaunch = createAutoLaunch(launch, workerInfo);
+      const autoLaunch = createAutoLaunch(config.launch, workerInfo);
 
       await session.launch(autoLaunch);
 
