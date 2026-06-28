@@ -15,14 +15,33 @@ module.exports = function (options = {}) {
 
   const session = new Session(config);
 
+
+  function createAutoLaunch(launch, workerInfo) {
+    const autoLaunch = {
+      ...launch
+    };
+
+    console.log(
+      `[DEBUG LAUNCH] autoTile=${launch.autoTile}, parallelIndex=${workerInfo.parallelIndex}`
+    );
+
+    if (launch.autoTile) {
+      autoLaunch.tileIndex = workerInfo.parallelIndex;
+    }
+
+    return autoLaunch;
+  }
+
   const sessionFixture = config.reuseBrowser
-    ? [async ({ }, use, workerInfo) => {
+    ? [async ({ launch }, use, workerInfo) => {
 
       console.log(
         `[WORKER ${workerInfo.workerIndex + 1}, configured max = ${workerInfo.config.workers}] Browser session started`
       );
 
-      await session.launch();
+      const autoLaunch = createAutoLaunch(launch, workerInfo);
+
+      await session.launch(autoLaunch);
 
       try {
         await use(session);
@@ -38,11 +57,13 @@ module.exports = function (options = {}) {
 
     : async ({ launch }, use, workerInfo) => {
 
+      const autoLaunch = createAutoLaunch(launch, workerInfo);
+
       console.log(
         `[WORKER ${workerInfo.workerIndex + 1}, configured max = ${workerInfo.config.workers}] Browser launching`
       );
 
-      await session.launch(launch);
+      await session.launch(autoLaunch);
 
       try {
         await use(session);
@@ -56,7 +77,7 @@ module.exports = function (options = {}) {
     };
 
   const fixtures = {
-    launch: [{}, { option: true }],
+    launch: [config.launch, { option: true }],
 
     session: sessionFixture,
 

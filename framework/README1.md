@@ -30,7 +30,18 @@ const { test } = require("playwright-visible-mouse")({
 Per-test launch overrides are not supported when reuseBrowser is enabled.
 Configure launch options in the framework initialization instead.
 
-`npx playwright test --workers=1``
+`npx playwright test --workers=3`
+>Create 3 worker processes to execute tests in parallel.
+```
+             Playwright
+                 |
+     +-----------+-----------+
+     |           |           |
+  Worker 0    Worker 1    Worker 2
+     |           |           |
+   Test 1      Test 2      Test 3
+   Test 4      Test 5      Test 6
+```
 
 ```
 test.describe("Tile 1", () => {
