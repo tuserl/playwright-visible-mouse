@@ -7,7 +7,9 @@ module.exports = {
     "index.js",
     "lib/**/*.js",
     "!**/node_modules/**",
-    "!**/test/**"
+    "!**/test/**",
+    "!lib/templates/**",      // Ignore template files
+    // or "!lib/templates/page.js"
   ],
 
   coverageDirectory: "coverage",
