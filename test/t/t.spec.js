@@ -3,6 +3,8 @@ const { BrowserManager } = require('../../lib/browserManager'); // Adjust path t
 
 test('my test using Playwright Test tracer', async ({ page }) => {
 
+  // Do not call page.setViewportSize() in your test code.
+  //  await page.setViewportSize({ width: 500, height: 500 });
   await page.goto('http://localhost:3001/');
   // 1. Instantiate the manager
   const bm = new BrowserManager();
