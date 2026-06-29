@@ -38,3 +38,7 @@ jest-cache/
 
 # Snapshots (optional)
 *.snap
+
+
+all-project-code.txt
+export-code.js
