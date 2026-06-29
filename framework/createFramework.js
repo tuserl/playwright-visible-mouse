@@ -13,9 +13,6 @@ module.exports = function (options = {}) {
     }
   };
 
-  const session = new Session(config);
-
-
   function createAutoLaunch(launch, workerInfo) {
     const autoLaunch = {
       ...launch
@@ -39,6 +36,8 @@ module.exports = function (options = {}) {
         `[WORKER ${workerInfo.workerIndex + 1}, configured max = ${workerInfo.config.workers}] Browser session started`
       );
 
+      const session = new Session(config);
+
       const autoLaunch = createAutoLaunch(config.launch, workerInfo);
 
       await session.launch(autoLaunch);
@@ -56,6 +55,8 @@ module.exports = function (options = {}) {
     }, { scope: "worker" }]
 
     : async ({ launch }, use, workerInfo) => {
+
+      const session = new Session(config);
 
       const autoLaunch = createAutoLaunch(launch, workerInfo);
 
