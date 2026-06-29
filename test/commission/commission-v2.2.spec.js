@@ -2,8 +2,10 @@ const { test, expect } = require("playwright-visible-mouse")({
   url: "http://localhost:9999/CommissionWebApp/index.jsp",
   interactionMode: "HUMAN",
   notify: true,
+  reuseBrowser: true,
   launch: {
-    mode: "maximized",
+    mode: "split2",
+    autoTile: true,
     headless: false
   }
 });
@@ -29,7 +31,7 @@ async function calculateCommission(ui, employeeType, itemType, customerType, ite
   await notifyWait(`${ui.testInfo.title}: $${result} ~ (〃￣︶￣)人(￣︶￣〃)`);
   return result;
 }
-//test.describe.configure({ mode: "parallel" });
+test.describe.configure({ mode: "parallel" });
 
 //================================= TEST CASES =========================================
 
