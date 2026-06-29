@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.3.1 - 2026-06-29
+
+### Fixed
+- Fixed `exists()` falsely matching Playwright Visible Mouse notification overlays.
+- Notification UI is now ignored during element detection to prevent false positives.
+- Added a warning when a framework notification matches the searched locator, helping users avoid duplicate text between notifications and page content.
+
 ## 1.3.0 - 2026-06-28
 
 ### Added
