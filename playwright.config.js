@@ -8,7 +8,7 @@ module.exports = {
     // IMPORTANT: Set headless to false so you can actually see and resize the window
     headless: false,
     launchOptions: {
-      args: ['--window-size=500,500'] // Starts the window at 500x500, but allows manual resizing
+      args: ['--window-size=2000,1500'] // Starts the window at 500x500, but allows manual resizing
     },
   },
 };
