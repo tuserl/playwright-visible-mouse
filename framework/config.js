@@ -7,7 +7,7 @@ module.exports = {
   url: null,
 
   reuseBrowser: false,
-  trace: "off", // // "on" | "off" | "retain-on-failure" | true | false
+  trace: "on", // // "on" | "off" | "retain-on-failure" | true | false
 
   launch: {
     mode: "maximized",

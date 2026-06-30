@@ -2,6 +2,13 @@ const base = require("@playwright/test");
 const defaults = require("./config");
 const Session = require("./session");
 
+
+function normalizeTraceForPW(trace) {
+  if (trace === true) return "on";
+  if (trace === false || trace == null) return "off";
+  return trace; // "on" | "off" | "retain-on-failure" | "on-first-retry" | ...
+}
+
 function computeTileArgs(cfg, workerInfo) {
   const args = [];
   const screenWidth = cfg.screenWidth || 1920;
@@ -79,18 +86,18 @@ module.exports = function (options = {}) {
   let fixtures;
 
   if (mode === "attach") {
+    // Tiling applies regardless of reuseBrowser — it's a worker-scoped launchOptions override.
+    const launchOptionsFixture = [async ({ launchOptions }, use, workerInfo) => {
+      const cfg = config.launch || {};
+      const args = computeTileArgs(cfg, workerInfo);
+      await use({
+        ...launchOptions,
+        headless: cfg.headless ?? launchOptions.headless,
+        slowMo: cfg.slowMo ?? launchOptions.slowMo,
+        args: [...(launchOptions.args || []), "--no-sandbox", ...args]
+      });
+    }, { scope: "worker" }];
     if (config.reuseBrowser) {
-      // Tiling applies regardless of reuseBrowser — it's a worker-scoped launchOptions override.
-      const launchOptionsFixture = [async ({ launchOptions }, use, workerInfo) => {
-        const cfg = config.launch || {};
-        const args = computeTileArgs(cfg, workerInfo);
-        await use({
-          ...launchOptions,
-          headless: cfg.headless ?? launchOptions.headless,
-          slowMo: cfg.slowMo ?? launchOptions.slowMo,
-          args: [...(launchOptions.args || []), "--no-sandbox", ...args]
-        });
-      }, { scope: "worker" }];
       // ===== ATTACH + REUSE BROWSER =====
       // The actual context/page are created ONCE per worker via these
       // internal worker-scoped fixtures (can't be named "context"/"page" —
@@ -144,6 +151,13 @@ module.exports = function (options = {}) {
       fixtures = {
         launchOptions: launchOptionsFixture,
         viewport: [null, { option: true }],
+
+        // let config.trace drive Playwright's own built-in tracing,
+        // so you don't have to pass --trace on every run.
+        // config.trace drives Playwright's own built-in tracing
+        ...(config.trace !== undefined
+          ? { trace: [normalizeTraceForPW(config.trace), { option: true, scope: "worker" }] }
+          : {}),
 
         session: async ({ page }, use, testInfo) => {
           const session = new Session(config);
