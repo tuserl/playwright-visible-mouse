@@ -2,8 +2,10 @@
 
 ## 1.4.0 - 2026-06-30
 
-### Added
-- framework Playwright attach mode for trace viewer support
+### Changed
+
+- Refactored browser architecture to support Playwright attach mode.
+- Trace Viewer now records full DOM snapshots instead of displaying `about:blank`.
 
 ## 1.3.1 - 2026-06-29
 
