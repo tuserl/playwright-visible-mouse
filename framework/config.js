@@ -2,11 +2,12 @@ module.exports = {
 
   // "launch" -> framework owns the browser (old behavior, tiled windows etc.)
   // "attach" -> uses Playwright Test's own page/context (full trace viewer DOM support)
-  mode: "launch",
+  mode: "attach",
 
   url: null,
 
   reuseBrowser: false,
+  trace: "off", // // "on" | "off" | "retain-on-failure" | true | false
 
   launch: {
     mode: "maximized",

@@ -2,6 +2,41 @@ const base = require("@playwright/test");
 const defaults = require("./config");
 const Session = require("./session");
 
+function computeTileArgs(cfg, workerInfo) {
+  const args = [];
+  const screenWidth = cfg.screenWidth || 1920;
+  const screenHeight = cfg.screenHeight || 1080;
+
+  let tileIndex = cfg.tileIndex || 0;
+  if (cfg.autoTile) tileIndex = workerInfo.parallelIndex;
+
+  if (cfg.mode === "split2") {
+    tileIndex %= 2;
+    const w = Math.floor(screenWidth / 2);
+    args.push(
+      `--window-position=${tileIndex === 0 ? 0 : w},0`,
+      `--window-size=${w},${screenHeight}`
+    );
+  } else if (cfg.mode === "split4") {
+    tileIndex %= 4;
+    const w = Math.floor(screenWidth / 2);
+    const h = Math.floor(screenHeight / 2);
+    const positions = [[0, 0], [w, 0], [0, h], [w, h]];
+    args.push(
+      `--window-position=${positions[tileIndex][0]},${positions[tileIndex][1]}`,
+      `--window-size=${w},${h}`
+    );
+  } else {
+    args.push("--start-maximized");
+  }
+
+  console.log(
+    `[DEBUG TILE] mode=${cfg.mode}, autoTile=${cfg.autoTile}, tileIndex=${tileIndex}, parallelIndex=${workerInfo.parallelIndex}`
+  );
+
+  return args;
+}
+
 module.exports = function (options = {}) {
 
   const config = {
@@ -31,45 +66,106 @@ module.exports = function (options = {}) {
     return autoLaunch;
   }
 
-
   const reservedFixtures = [
     "session",
     "page",
-    "browser"
+    "browser",
+    "context",
+    "_sharedContext",
+    "_sharedPage",
+    "_sharedSession"
   ];
 
   let fixtures;
 
   if (mode === "attach") {
-    // ===================== ATTACH MODE =====================
-    // Uses Playwright Test's own `page` fixture, so tracing (trace: 'on' in
-    // playwright.config.js) captures full DOM snapshots correctly.
-    const sessionFixture = async ({ page }, use, testInfo) => {
-      const session = new Session(config);
-      await session.attach(page);
-      await session.beforeEach(testInfo);
+    if (config.reuseBrowser) {
+      // Tiling applies regardless of reuseBrowser — it's a worker-scoped launchOptions override.
+      const launchOptionsFixture = [async ({ launchOptions }, use, workerInfo) => {
+        const cfg = config.launch || {};
+        const args = computeTileArgs(cfg, workerInfo);
+        await use({
+          ...launchOptions,
+          headless: cfg.headless ?? launchOptions.headless,
+          slowMo: cfg.slowMo ?? launchOptions.slowMo,
+          args: [...(launchOptions.args || []), "--no-sandbox", ...args]
+        });
+      }, { scope: "worker" }];
+      // ===== ATTACH + REUSE BROWSER =====
+      // The actual context/page are created ONCE per worker via these
+      // internal worker-scoped fixtures (can't be named "context"/"page" —
+      // those names are reserved at test-scope by Playwright Test itself).
+      fixtures = {
+        launchOptions: launchOptionsFixture,
+        viewport: [null, { option: true }],
 
-      if (config.beforeEach) {
-        await config.beforeEach({ ...session.api, testInfo });
-      }
+        _sharedContext: [async ({ browser }, use) => {
+          const context = await browser.newContext();
+          try { await use(context); } finally { await context.close(); }
+        }, { scope: "worker" }],
 
-      try {
-        await use(session);
-      } finally {
-        await session.afterEach();
-        if (config.afterEach) {
-          await config.afterEach({ ...session.api, testInfo });
+        _sharedPage: [async ({ _sharedContext }, use) => {
+          const page = await _sharedContext.newPage();
+          try { await use(page); } finally { await page.close(); }
+        }, { scope: "worker" }],
+
+        _sharedSession: [async ({ _sharedPage, _sharedContext }, use) => {
+          const session = new Session(config);
+          await session.attach(_sharedPage, _sharedContext);
+          await use(session);
+        }, { scope: "worker" }],
+
+        // Override the built-in test-scoped `context`/`page` fixtures so that
+        // every test just gets a reference to the one shared per-worker instance.
+        context: async ({ _sharedContext }, use) => {
+          await use(_sharedContext);
+        },
+
+        page: async ({ _sharedPage }, use) => {
+          await use(_sharedPage);
+        },
+
+        session: async ({ _sharedSession }, use) => {
+          await use(_sharedSession);
+        },
+
+        ui: async ({ session, page }, use, testInfo) => {
+          await session.beforeEach(testInfo);
+          try {
+            await use({ ...session.api, page, testInfo });
+          } finally {
+            await session.afterEach(testInfo);
+          }
         }
-        await session.close(); // no-op in attach mode, kept for symmetry
-      }
-    };
+      };
 
-    fixtures = {
-      session: sessionFixture,
-      ui: async ({ session, page }, use, testInfo) => {
-        await use({ ...session.api, page, testInfo });
-      }
-    };
+    } else {
+      // ===== ATTACH, FRESH CONTEXT PER TEST (original attach mode) =====
+      fixtures = {
+        launchOptions: launchOptionsFixture,
+        viewport: [null, { option: true }],
+
+        session: async ({ page }, use, testInfo) => {
+          const session = new Session(config);
+          await session.attach(page);
+          await session.beforeEach(testInfo);
+
+          if (config.beforeEach) await config.beforeEach({ ...session.api, testInfo });
+
+          try {
+            await use(session);
+          } finally {
+            await session.afterEach(testInfo);
+            if (config.afterEach) await config.afterEach({ ...session.api, testInfo });
+            await session.close();
+          }
+        },
+
+        ui: async ({ session, page }, use, testInfo) => {
+          await use({ ...session.api, page, testInfo });
+        }
+      };
+    }
   }
   else {
     // ===================== LAUNCH MODE (original behavior) =====================
