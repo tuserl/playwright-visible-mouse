@@ -1,47 +1,13 @@
 const base = require("@playwright/test");
 const defaults = require("./config");
 const Session = require("./session");
+const { computeWindowArgs } = require("../lib/windowTiling");
 
 
 function normalizeTraceForPW(trace) {
   if (trace === true) return "on";
   if (trace === false || trace == null) return "off";
   return trace; // "on" | "off" | "retain-on-failure" | "on-first-retry" | ...
-}
-
-function computeTileArgs(cfg, workerInfo) {
-  const args = [];
-  const screenWidth = cfg.screenWidth || 1920;
-  const screenHeight = cfg.screenHeight || 1080;
-
-  let tileIndex = cfg.tileIndex || 0;
-  if (cfg.autoTile) tileIndex = workerInfo.parallelIndex;
-
-  if (cfg.mode === "split2") {
-    tileIndex %= 2;
-    const w = Math.floor(screenWidth / 2);
-    args.push(
-      `--window-position=${tileIndex === 0 ? 0 : w},0`,
-      `--window-size=${w},${screenHeight}`
-    );
-  } else if (cfg.mode === "split4") {
-    tileIndex %= 4;
-    const w = Math.floor(screenWidth / 2);
-    const h = Math.floor(screenHeight / 2);
-    const positions = [[0, 0], [w, 0], [0, h], [w, h]];
-    args.push(
-      `--window-position=${positions[tileIndex][0]},${positions[tileIndex][1]}`,
-      `--window-size=${w},${h}`
-    );
-  } else {
-    args.push("--start-maximized");
-  }
-
-  console.log(
-    `[DEBUG TILE] mode=${cfg.mode}, autoTile=${cfg.autoTile}, tileIndex=${tileIndex}, parallelIndex=${workerInfo.parallelIndex}`
-  );
-
-  return args;
 }
 
 module.exports = function (options = {}) {
@@ -89,7 +55,7 @@ module.exports = function (options = {}) {
     // Tiling applies regardless of reuseBrowser — it's a worker-scoped launchOptions override.
     const launchOptionsFixture = [async ({ launchOptions }, use, workerInfo) => {
       const cfg = config.launch || {};
-      const args = computeTileArgs(cfg, workerInfo);
+      const args = computeWindowArgs(cfg, workerInfo);
       await use({
         ...launchOptions,
         headless: cfg.headless ?? launchOptions.headless,
