@@ -3,6 +3,12 @@ const defaults = require("./config");
 const Session = require("./session");
 const { computeWindowArgs } = require("../lib/windowTiling");
 const { buildLaunchFixtures } = require("./legacy/launchMode");
+const { cliTraceExplicit } = Session;
+
+if (process.env.PWVM_CLI_TRACE_EXPLICIT === undefined) {
+  const explicit = process.argv.some(a => a === "--trace" || a.startsWith("--trace="));
+  process.env.PWVM_CLI_TRACE_EXPLICIT = explicit ? "1" : "0";
+}
 
 function normalizeTraceForPW(trace) {
   if (trace === true) return "on";
@@ -129,7 +135,7 @@ module.exports = function (options = {}) {
         // let config.trace drive Playwright's own built-in tracing,
         // so you don't have to pass --trace on every run.
         // config.trace drives Playwright's own built-in tracing
-        ...(config.trace !== undefined
+        ...(config.trace !== undefined && !cliTraceExplicit()
           ? { trace: [normalizeTraceForPW(config.trace), { option: true, scope: "worker" }] }
           : {}),
 

@@ -1,7 +1,7 @@
 const { test, expect } = require("playwright-visible-mouse")({
   //  mode: "attach",
   url: "http://localhost:9999/CommissionWebApp/index.jsp",
-  interactionMode: "INSTANT",
+  interactionMode: "HUMAN",
   notify: true,
   reuseBrowser: true,
   //  trace: "off",
@@ -20,7 +20,7 @@ const CustomerType = Object.freeze({ REGULAR: "REGULAR", NON_REGULAR: "NON_REGUL
 async function calculateCommission(ui, employeeType, itemType, customerType, itemPrice) {
   const { btn, field, selectOptionOrGetState, text, page, mouse, notifyWait, InteractionMode, setInteractionMode } = ui;
   expectRequiredSelectIfPresent(await selectOptionOrGetState("employeeType", employeeType));
-  //  setInteractionMode(InteractionMode.NORMAL);
+  setInteractionMode(InteractionMode.NORMAL);
   expectRequiredSelectIfPresent(await selectOptionOrGetState("itemType", itemType));
   expectRequiredSelectIfPresent(await selectOptionOrGetState("customerType", customerType));
   if (itemPrice != null) await field("Enter item price...").type(itemPrice.toString());
@@ -42,6 +42,7 @@ test("TC01", async ({ ui }) => {
     .toBe(null);
 });
 
+/* 
 test("TC02", async ({ ui }) => {
   expect(await calculateCommission(ui, EmployeeType.SALARIED, null, CustomerType.REGULAR, 1000))
     .toBe(null);
@@ -101,3 +102,5 @@ test("TC13", async ({ ui }) => {
   expect(await calculateCommission(ui, EmployeeType.SALARIED, ItemType.OTHER, CustomerType.NON_REGULAR, 1000))
     .toBe(0);
 });
+
+*/

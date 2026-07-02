@@ -10,6 +10,11 @@ function normalizeTrace(trace) {
   return "on";
 }
 
+// Detect explicit --trace flag on the CLI
+function cliTraceExplicit() {
+  return process.env.PWVM_CLI_TRACE_EXPLICIT === "1";
+}
+
 
 class Session {
 
@@ -68,7 +73,16 @@ class Session {
   // otherwise fall back to whatever Playwright itself was told (--trace on, or
   // playwright.config.js's use.trace / project.use.trace).
   _resolveTraceMode(testInfo) {
+    // CLI flag explicitly passed -> it wins, no matter what framework default says
+    if (cliTraceExplicit()) {
+      const pwTrace = testInfo?.project?.use?.trace;
+      return normalizeTrace(pwTrace) ?? "off";
+    }
+
+    // No CLI override -> framework's own default applies
     if (this.explicitTraceMode != null) return this.explicitTraceMode;
+
+    // Framework didn't set anything either -> fall back to playwright.config.js
     const pwTrace = testInfo?.project?.use?.trace;
     return normalizeTrace(pwTrace) ?? "off";
   }
@@ -135,3 +149,4 @@ class Session {
 }
 
 module.exports = Session;
+module.exports.cliTraceExplicit = cliTraceExplicit;
