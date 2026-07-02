@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.4.1 - 2026-07-02
+
+### Fixed
+- `--trace off` was ignored in worker processes; CLI flags weren't forwarded
+  from the main process, so tracing stayed on regardless of the flag.
+
+### Changed
+- Moved legacy launch-mode fixture wiring out of `createFramework.js` into
+  `framework/legacy/launchMode.js` (no behavior change).
+
 ## 1.4.0 - 2026-06-30
 
 ### Changed
