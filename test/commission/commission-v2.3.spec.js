@@ -1,7 +1,7 @@
 const { test, expect } = require("playwright-visible-mouse")({
   //  mode: "attach",
   url: "http://localhost:9999/CommissionWebApp/index.jsp",
-  interactionMode: "HUMAN",
+  interactionMode: "INSTANT",
   notify: true,
   reuseBrowser: true,
   //  trace: "off",
@@ -20,14 +20,14 @@ const CustomerType = Object.freeze({ REGULAR: "REGULAR", NON_REGULAR: "NON_REGUL
 async function calculateCommission(ui, employeeType, itemType, customerType, itemPrice) {
   const { btn, field, selectOptionOrGetState, text, page, mouse, notifyWait, InteractionMode, setInteractionMode } = ui;
   expectRequiredSelectIfPresent(await selectOptionOrGetState("employeeType", employeeType));
-  setInteractionMode(InteractionMode.NORMAL);
+  //  setInteractionMode(InteractionMode.NORMAL);
   expectRequiredSelectIfPresent(await selectOptionOrGetState("itemType", itemType));
   expectRequiredSelectIfPresent(await selectOptionOrGetState("customerType", customerType));
   if (itemPrice != null) await field("Enter item price...").type(itemPrice.toString());
   await btn("Calculate Commission").click();
-  await mouse.randomMoveHuman();
-  await page.waitForTimeout(500);
-  await mouse.randomMoveHuman();
+  /*await mouse.randomMoveHuman();
+  //await page.waitForTimeout(500);
+  await mouse.randomMoveHuman();*/
   if (!(await btn("Calculate Again").exists(1000))) return null;
   const result = parseFloat((await text({ class: "commission-value" }).loc.textContent()).replace(/[$,]/g, ""));
   await notifyWait(`${ui.testInfo.title}: $${result} ~ (〃￣︶￣)人(￣︶￣〃)`);

@@ -2,7 +2,7 @@ const base = require("@playwright/test");
 const defaults = require("./config");
 const Session = require("./session");
 const { computeWindowArgs } = require("../lib/windowTiling");
-
+const { buildLaunchFixtures } = require("./legacy/launchMode");
 
 function normalizeTraceForPW(trace) {
   if (trace === true) return "on";
@@ -55,12 +55,20 @@ module.exports = function (options = {}) {
     // Tiling applies regardless of reuseBrowser — it's a worker-scoped launchOptions override.
     const launchOptionsFixture = [async ({ launchOptions }, use, workerInfo) => {
       const cfg = config.launch || {};
-      const args = computeWindowArgs(cfg, workerInfo);
+
+      const tileIndex = cfg.autoTile ? workerInfo.parallelIndex : (cfg.tileIndex ?? 0);
+      const { args: tileArgs } = computeWindowArgs({
+        mode: cfg.mode,
+        tileIndex,
+        screenWidth: cfg.screenWidth ?? 1920,
+        screenHeight: cfg.screenHeight ?? 1080
+      });
+
       await use({
         ...launchOptions,
         headless: cfg.headless ?? launchOptions.headless,
         slowMo: cfg.slowMo ?? launchOptions.slowMo,
-        args: [...(launchOptions.args || []), "--no-sandbox", ...args]
+        args: [...(launchOptions.args || []), "--no-sandbox", ...tileArgs]
       });
     }, { scope: "worker" }];
     if (config.reuseBrowser) {
@@ -148,95 +156,8 @@ module.exports = function (options = {}) {
     }
   }
   else {
-    // ===================== LAUNCH MODE (original behavior) =====================
-
-    const sessionFixture = config.reuseBrowser
-      ? [async ({ }, use, workerInfo) => {
-
-        console.log(
-          `[WORKER ${workerInfo.workerIndex + 1}, configured max = ${workerInfo.config.workers}] Browser session started`
-        );
-
-        const session = new Session(config);
-
-        const autoLaunch = createAutoLaunch(config.launch, workerInfo);
-
-        await session.launch(autoLaunch);
-
-        try {
-          await use(session);
-        } finally {
-          console.log(
-            `[WORKER ${workerInfo.workerIndex + 1}, configured max = ${workerInfo.config.workers}] Browser session closed`
-          );
-
-          await session.close();
-        }
-
-      }, { scope: "worker" }]
-
-      : async ({ launch }, use, workerInfo) => {
-
-        const session = new Session(config);
-
-        const autoLaunch = createAutoLaunch(launch, workerInfo);
-
-        console.log(
-          `[WORKER ${workerInfo.workerIndex + 1}, configured max = ${workerInfo.config.workers}] Browser launching`
-        );
-
-        await session.launch(autoLaunch);
-
-        try {
-          await use(session);
-        } finally {
-          console.log(
-            `[WORKER ${workerInfo.workerIndex + 1}, configured max = ${workerInfo.config.workers}] Browser closed`
-          );
-
-          await session.close();
-        }
-      };
-
-    fixtures = {
-      launch: [config.launch, { option: true }],
-
-      session: sessionFixture,
-
-      page: async ({ session }, use, testInfo) => {
-        await session.beforeEach(testInfo);
-
-        if (config.beforeEach) {
-          await config.beforeEach({
-            ...session.api,
-            page: session.api.page,
-            testInfo
-          });
-        }
-
-        try {
-          await use(session.api.page);
-        } finally {
-          await session.afterEach();
-
-          if (config.afterEach) {
-            await config.afterEach({
-              ...session.api,
-              page: session.api.page,
-              testInfo
-            });
-          }
-        }
-      },
-
-      ui: async ({ session, page }, use, testInfo) => {
-        await use({
-          ...session.api,
-          page,
-          testInfo
-        });
-      }
-    };
+    // ===================== LEGACY LAUNCH MODE (original behavior) =====================
+    fixtures = buildLaunchFixtures(config);
   }
 
 
