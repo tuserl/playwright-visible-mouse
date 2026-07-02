@@ -1,6 +1,6 @@
 {
   "name": "playwright-visible-mouse",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "visible mouse for Playwright",
   "main": "index.js",
   "exports": {
