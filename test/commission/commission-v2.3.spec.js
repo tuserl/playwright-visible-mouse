@@ -42,12 +42,13 @@ test("TC01", async ({ ui }) => {
     .toBe(null);
 });
 
-/* 
+
 test("TC02", async ({ ui }) => {
   expect(await calculateCommission(ui, EmployeeType.SALARIED, null, CustomerType.REGULAR, 1000))
     .toBe(null);
 });
 
+/*
 test("TC03", async ({ ui }) => {
   expect(await calculateCommission(ui, EmployeeType.SALARIED, ItemType.STANDARD, null, 1000))
     .toBe(null);
